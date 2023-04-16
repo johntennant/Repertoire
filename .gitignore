@@ -1,0 +1,23 @@
+.vscode/sftp.json
+
+# Sensitive information
+.env
+
+# Environment-specific files
+config.json
+
+# Dependency directories
+lib/node_modules/
+lib/bower_components/
+
+# Build artifacts
+dist/
+build/
+*.log
+
+# Operating system and editor-specific files
+.DS_Store
+.vscode/
+*.swp
+*.swo
+*.bak
