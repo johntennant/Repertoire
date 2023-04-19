@@ -15,6 +15,7 @@ lib/bower_components/
 dist/
 build/
 *.log
+*.cache
 
 # Operating system and editor-specific files
 .DS_Store
