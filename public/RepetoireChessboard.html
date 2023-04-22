@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+<head>
+  <title>Repertoirev0.1</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="lib/bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="lib/bower_components/chessboard-js/css/chessboard.css">
+  <meta name="viewport" content="width = device-width, initial-scale = 1.0, maximum-scale = 1.0, user-scalable = no">
+
+  <style>
+
+    body {
+      background-color: #333; /* dark grey */
+    }
+    body {
+      color: #fff; /* white */
+    }
+
+    .btn {
+      margin-right: 3px; 
+      margin-top: 5px;
+    }
+
+    /* Default style for desktop and larger screens */
+    #board {
+      width: 60%;
+    }
+
+    /* Style for smaller screens (e.g., phones) */
+    @media screen and (max-width: 768px) {
+      #board {
+        width: 100%;
+      }
+      .btn {
+      width: 100%; 
+      }
+    }
+
+    .hide-button {
+      display: none;
+    }
+    
+    /* how do I change the color of the board? This isn't working. 
+
+    .chessboard .chess_square_light {
+      background-color: #72654f; 
+      }
+    .chessboard .chess_square_dark {
+      background-color: #5a4e3e; 
+      }
+*/
+
+  </style>
+ 
+  
+</head>
+<body>
+
+  <div class="container">
+  
+    <!-- New Chessboard Declaration See <head> to screen size dependancies. -->
+    <div id="board" class="mt-2"></div>
+
+    <div class="text-left mt-1">
+      <div id="correct-move" class="mt-1"></div>
+      <div id="mistake-count">Total Mistakes: 0</div>
+    </div>
+
+    <div class="text-left mt-1">
+      <button id="showCorrectMoveButton" class="btn btn-secondary">Show Correct Move</button>
+      <button id="playAsBlack" class="btn btn-secondary">Play As Black</button>
+      <button id="resetButton" class="btn btn-secondary">Reset Board</button>
+      <textarea id="pgnText" rows="3" class="form-control mb-3 mt-1" placeholder="Enter or paste PGN string here"></textarea>
+      <button id="PgnTextButton" class="btn btn-primary">Load PGN Text</button>
+      <!-- hidden buttons start. -->
+      <button id="flipBoardButton" class="btn btn-secondary hide-button">Flip Board</button>
+      <button id="makeFirstMoveButton" class="btn btn-secondary hide-button">Make First Move</button>
+      <!-- Hidden buttons end. -->
+      <!-- PGN Text Field -->
+
+    </div>
+    <div class="text-left mt-4">
+      <a href="https://github.com/johntennant/Repertoire" target="_blank">Project Repertoire Github Page</a>
+    
+  </div>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.2/chess.min.js"></script>
+  <script src="lib/bower_components/chessboard-js/js/chessboard.js"></script>
+  <script src="lib/mPGNPlaybackAssist.js?ver=' + Date.now()"></script>
+  <!-- <script src="lib/mPGNPlaybackAssist.js"></script> -->
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const pgnParam = urlParams.get('pgn');
+      if (pgnParam) {
+        const pgnTextField = document.getElementById('pgnText');
+        pgnTextField.value = decodeURIComponent(pgnParam);
+      }
+      
+      // Automatically click the "Load PGN Text" button
+      // with a delay to allow the page to load
+      setTimeout(function() {
+        document.getElementById('PgnTextButton').click();
+      }, 500);
+    });
+  </script>
+  
+</body>
+</html>
