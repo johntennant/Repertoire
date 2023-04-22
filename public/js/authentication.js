@@ -1,3 +1,4 @@
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js";
 
 // Get elements from the DOM
 const loginForm = document.getElementById("login-form");
@@ -7,7 +8,7 @@ const signupBtn = document.getElementById("signup-btn");
 // Function to handle user sign-up
 const signUp = async (email, password) => {
   try {
-    const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     console.log("User signed up:", userCredential.user);
   } catch (error) {
     console.error("Error signing up:", error.message);
@@ -17,7 +18,7 @@ const signUp = async (email, password) => {
 // Function to handle user login
 const logIn = async (email, password) => {
   try {
-    const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
     console.log("User logged in:", userCredential.user);
   } catch (error) {
     console.error("Error logging in:", error.message);
@@ -40,7 +41,7 @@ signupBtn.addEventListener("click", () => {
 });
 
 // Add event listener for authentication state changes
-firebase.auth().onAuthStateChanged((user) => {
+onAuthStateChanged(auth, (user) => {
   if (user) {
     console.log("User is signed in:", user);
     // Perform any actions needed when a user is logged in
