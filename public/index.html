@@ -6,7 +6,7 @@
     <title>Repertoire User Signup</title>
 
     <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
-    <script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js"></script>
 
     <!-- <script defer src="/__/firebase/init.js?useEmulator=true"></script> -->
 
@@ -45,8 +45,8 @@
     <script src="js\getuserdata.js"></script>
 
     <!-- Add the Firebase products that you want to use -->
-    <script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js"></script>
 
     <h1>Login</h1>
   <form id="login-form">
@@ -66,7 +66,7 @@
 
     <p id="load">Firebase SDK Loading&hellip;</p>
 
-    <script>
+    <!-- <script>
       document.addEventListener('DOMContentLoaded', function() {
         const loadEl = document.querySelector('#load');
         // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
@@ -103,6 +103,6 @@
           loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
         }
       });
-    </script>
+    </script> -->
   </body>
 </html>
