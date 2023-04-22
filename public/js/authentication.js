@@ -1,19 +1,3 @@
-import {initializeApp} from 'https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js';
-
-// TODO: Replace the following with your app's Firebase project configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyD1cxRuxfABPCNdA072NqkBx_Se7cdy19Q",
-    authDomain: "project-repertoire.firebaseapp.com",
-    projectId: "project-repertoire",
-    storageBucket: "project-repertoire.appspot.com",
-    messagingSenderId: "1077824903060",
-    appId: "1:1077824903060:web:394b50f971a3edd575a181",
-    measurementId: "G-7B2Z15KFWL"
-};
-
-const app = initializeApp(firebaseConfig);
-
-
 
 // Get elements from the DOM
 const loginForm = document.getElementById("login-form");
