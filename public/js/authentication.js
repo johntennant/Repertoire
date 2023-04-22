@@ -1,4 +1,7 @@
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js";
+import { getUserData } from "./getuserdata.js";
+const app = window.app;
+const auth = getAuth(app);
 
 // Get elements from the DOM
 const loginForm = document.getElementById("login-form");
@@ -46,6 +49,9 @@ onAuthStateChanged(auth, (user) => {
     console.log("User is signed in:", user);
     // Perform any actions needed when a user is logged in
     // e.g., update the UI, fetch user-specific data from Firestore, etc.
+    // Call getUserData with the user's UID
+    const userData = getUserData(user.uid);
+    console.log("Fetched user data:", userData);
   } else {
     console.log("No user is signed in.");
     // Perform any actions needed when a user is logged out
