@@ -51,6 +51,21 @@
       background-color: #5a4e3e; 
       }
 */
+.feedback-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  width: 100%;
+}
+
+.mistake-count {
+  text-align: right;
+}
+
+.move-number {
+  font-size: 16px;
+  text-align: right;
+}
 
   </style>
  
@@ -60,30 +75,35 @@
 
   <div class="container">
   
-    <!-- New Chessboard Declaration See <head> to screen size dependancies. -->
+    <!-- Chessboard Declaration See <head> for screen size dependancies. -->
     <div id="board" class="mt-2"></div>
 
-    <div class="text-left mt-1">
-      <div id="correct-move" class="mt-1"></div>
+    <div class="feedback-container">
+      <!-- <div class="text-left mt-1"> -->
       <div id="mistake-count">Total Mistakes: 0</div>
+      <div id="correct-move" class="mt-1"></div>
+      <div id="move-number">Move Number: 1</div>
     </div>
-
+    
+    
     <div class="text-left mt-1">
       <button id="showCorrectMoveButton" class="btn btn-secondary">Show Correct Move</button>
       <button id="playAsBlack" class="btn btn-secondary">Play As Black</button>
       <button id="resetButton" class="btn btn-secondary">Reset Board</button>
-      <textarea id="pgnText" rows="3" class="form-control mb-3 mt-1" placeholder="Enter or paste PGN string here"></textarea>
+      <textarea id="pgnText" rows="3" class="form-control mb-3 mt-1"
+        placeholder="Enter or paste PGN string here"></textarea>
       <button id="PgnTextButton" class="btn btn-primary">Load PGN Text</button>
       <!-- hidden buttons start. -->
       <button id="flipBoardButton" class="btn btn-secondary hide-button">Flip Board</button>
       <button id="makeFirstMoveButton" class="btn btn-secondary hide-button">Make First Move</button>
       <!-- Hidden buttons end. -->
       <!-- PGN Text Field -->
-
+    
     </div>
+    
     <div class="text-left mt-4">
       <a href="https://github.com/johntennant/Repertoire" target="_blank">Project Repertoire Github Page</a>
-    
+    </div>
   </div>
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.2/chess.min.js"></script>
