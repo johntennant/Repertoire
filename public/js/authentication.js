@@ -1,5 +1,5 @@
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js";
-import { getUserData, getOpeningData } from "./getuserdata.js";
+import { getUserData, getOpeningData } from "./userDataInteractions.js";
 const app = window.app;
 const auth = getAuth(app);
 

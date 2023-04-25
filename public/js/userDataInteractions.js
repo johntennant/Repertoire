@@ -1,7 +1,8 @@
-import { getFirestore, collection, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js";
+import { getFirestore, collection, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js";
 import { handleOpeningButtonClick } from './openingButtons.js';
-
+import { shufflePickString } from './shuffleFromArrayAndStoreHistory.js'; 
+import { openURLorPGN } from './handleUrlDrillOrPgnLine.js';
 
 // Is needed anymore? (see below)
 export const getUserData = async (uid) => {
@@ -24,8 +25,10 @@ export const getUserData = async (uid) => {
 };
 
 // Creates a button for each opening in the user's openings collection
-// and registers a click event listener for each button
-
+// and registers a click event listener for the button
+// The click event listener calls the handleOpeningButtonClick function
+// with the opening data and returns the selected opening line
+// and the updates the used indexes array.
 
 function createOpeningButton(openingName, openingData) {
   const button = document.createElement("button");
@@ -33,7 +36,19 @@ function createOpeningButton(openingName, openingData) {
   button.classList.add("opening-button");
   button.addEventListener("click", () => {
     // Call the handleOpeningButtonClick function with the opening data
-    handleOpeningButtonClick(openingName, openingData[openingName]);
+    const fetchedDataResult = handleOpeningButtonClick(openingName, openingData[openingName]);
+    const selectedOpeningLines = fetchedDataResult.lines;
+    // console.log("Selected Opening Lines:", selectedOpeningLines);
+    const selectedOpeningUsedIndexes = fetchedDataResult.usedIndexes;
+    const shuffleResult = shufflePickString(selectedOpeningUsedIndexes, selectedOpeningLines);
+    const selectedOpeningLine = shuffleResult.pickedString;
+    console.log("From userDataInteractions.js, Selected Opening Line:", selectedOpeningLine);
+    const updatedUsedIndexesArray = shuffleResult.updatedUsedIndexes;
+    const colorKey = fetchedDataResult.colorKey;
+    console.log("From userDataInteractions.js, Color Key:", colorKey);
+    const openingID = 'openingID';
+    openURLorPGN(selectedOpeningLine);
+    updateOpeningUsedIndexes(openingID, colorKey, updatedUsedIndexesArray);
   });
   return button;
 }
@@ -73,3 +88,22 @@ export const getOpeningData = async (uid, openingID) => {
     return null;
   }
 };
+
+async function updateOpeningUsedIndexes(openingID, color, updatedUsedIndexesArray) {
+  if (color !== 'asWhite' && color !== 'asBlack') {
+    console.error('Invalid color. Please provide "white" or "black" as the color argument.');
+    return;
+  }
+
+  const fieldName = color === 'asWhite' ? 'asWhiteUsedIndexes' : 'asBlackUsedIndexes';
+  const db = getFirestore();
+
+  try {
+    await updateDoc(doc(db, 'openings', openingID), {
+      [fieldName]: updatedUsedIndexesArray,
+    });
+    console.log(`Updated ${fieldName} for openingID: ${openingID}`);
+  } catch (error) {
+    console.error('Error updating used indexes:', error);
+  }
+}
