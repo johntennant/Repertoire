@@ -48,7 +48,7 @@ function createOpeningButton(openingName, openingData) {
     console.log("From userDataInteractions.js, Color Key:", colorKey);
     const openingID = 'openingID';
     openURLorPGN(selectedOpeningLine);
-    updateOpeningUsedIndexes(openingID, colorKey, updatedUsedIndexesArray);
+    updateOpeningUsedIndexes(uid, openingID, colorKey, updatedUsedIndexesArray);
   });
   return button;
 }
@@ -89,9 +89,13 @@ export const getOpeningData = async (uid, openingID) => {
   }
 };
 
-async function updateOpeningUsedIndexes(openingID, color, updatedUsedIndexesArray) {
+
+
+// This updates the used indexes array for the opening that was clicked on.
+// It should be: users > uid > openings > openingID > name if the map > asWhiteUsedIndexes [or asBlackUsedIndexes]
+async function updateOpeningUsedIndexes(uid, openingID, color, updatedUsedIndexesArray) {
   if (color !== 'asWhite' && color !== 'asBlack') {
-    console.error('Invalid color. Please provide "white" or "black" as the color argument.');
+    console.error('Invalid color. Please provide "asWhite" or "asBlack" as the color argument.');
     return;
   }
 
@@ -99,11 +103,32 @@ async function updateOpeningUsedIndexes(openingID, color, updatedUsedIndexesArra
   const db = getFirestore();
 
   try {
-    await updateDoc(doc(db, 'openings', openingID), {
+    await updateDoc(doc(db, 'users', uid, 'openings', openingID), {
       [fieldName]: updatedUsedIndexesArray,
     });
     console.log(`Updated ${fieldName} for openingID: ${openingID}`);
   } catch (error) {
     console.error('Error updating used indexes:', error);
   }
+}
+
+// Get the current user's ID
+
+function getCurrentUserId() {
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  if (user) {
+    return user.uid;
+  } else {
+    console.log("No user is signed in.");
+    return null;
+  }
+}
+
+const uid = getCurrentUserId();
+if (uid) {
+  updateOpeningUsedIndexes(uid, openingID, color, updatedUsedIndexesArray);
+} else {
+  console.error("User not signed in. Unable to update used indexes.");
 }
