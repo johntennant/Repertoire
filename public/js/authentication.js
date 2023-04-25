@@ -2,7 +2,7 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, on
 import { getUserData, getOpeningData } from "./userDataInteractions.js";
 const app = window.app;
 const auth = getAuth(app);
-
+ 
 // Get elements from the DOM
 const loginForm = document.getElementById("login-form");
 const loginBtn = document.getElementById("login-btn");

@@ -1,7 +1,7 @@
 // checks if the first character of a string is a number
 // if no, then open the URL
 // if yes, then open a mPGNPlaybackChessboard.html and copy the 'string' to the clipboard
-
+ 
 export function openURLorPGN(string) {
     if (isNaN(string.charAt(0))) {
 

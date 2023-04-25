@@ -1,7 +1,7 @@
 
 // Retrieve the array of opening lines from the opening data.
 // Also retrieve the array of used indexes from the opening data.
-
+ 
 export function handleOpeningButtonClick(openingName, openingData) {
   console.log("Opening data for", openingName, ":", openingData);
 

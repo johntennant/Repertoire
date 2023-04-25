@@ -109,7 +109,7 @@ async function updateOpeningUsedIndexes(uid, openingID, color, updatedUsedIndexe
     console.log(`Updated ${fieldName} for openingID: ${openingID}`);
   } catch (error) {
     console.error('Error updating used indexes:', error);
-  }
+  } 
 }
 
 // Get the current user's ID
