@@ -115,7 +115,7 @@ async function updateOpeningUsedIndexes(uid, openingID, color, updatedUsedIndexe
 // Get the current user's ID
 
 function getCurrentUserId() {
-  const auth = getAuth();
+  const auth = getAuth(); 
   const user = auth.currentUser;
 
   if (user) {
