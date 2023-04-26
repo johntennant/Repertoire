@@ -16,15 +16,15 @@ export function openURLorPGN(string) {
       // Load the URL with a new tab
       window.open(urlPlusPGN, '_blank');
   
-      // Copy the URL to the clipboard
-      navigator.clipboard.writeText(string).then(
-        function () {
-          console.log('Async: Copying to clipboard was successful!');
-        },
-        function (err) {
-          console.error('Async: Could not copy text: ', err);
-        }
-      );
+      // // Copy the URL to the clipboard
+      // navigator.clipboard.writeText(string).then(
+      //   function () {
+      //     console.log('Async: Copying to clipboard was successful!');
+      //   },
+      //   function (err) {
+      //     console.error('Async: Could not copy text: ', err);
+      //   }
+      // );
     }
   }
   

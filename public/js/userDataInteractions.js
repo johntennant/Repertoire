@@ -48,7 +48,8 @@ function createOpeningButton(openingName, openingData) {
     console.log("From userDataInteractions.js, Color Key:", colorKey);
     const openingID = 'openingID';
     openURLorPGN(selectedOpeningLine);
-    updateOpeningUsedIndexes(uid, openingID, colorKey, updatedUsedIndexesArray);
+    const uid = getCurrentUserId();
+    updateOpeningUsedIndexes(uid, openingID, openingName, colorKey, updatedUsedIndexesArray);
   });
   return button;
 }
@@ -89,11 +90,9 @@ export const getOpeningData = async (uid, openingID) => {
   }
 };
 
-
-
 // This updates the used indexes array for the opening that was clicked on.
-// It should be: users > uid > openings > openingID > name if the map > asWhiteUsedIndexes [or asBlackUsedIndexes]
-async function updateOpeningUsedIndexes(uid, openingID, color, updatedUsedIndexesArray) {
+// It should be: users [colleciton] > uid [document] > openings [collection] > openingID [document] > [name-of-the-opening][map] > "asWhiteUsedIndexes" or "asBlackUsedIndexes" [array]
+async function updateOpeningUsedIndexes(uid, openingID, openingName, color, updatedUsedIndexesArray) {
   if (color !== 'asWhite' && color !== 'asBlack') {
     console.error('Invalid color. Please provide "asWhite" or "asBlack" as the color argument.');
     return;
@@ -101,15 +100,28 @@ async function updateOpeningUsedIndexes(uid, openingID, color, updatedUsedIndexe
 
   const fieldName = color === 'asWhite' ? 'asWhiteUsedIndexes' : 'asBlackUsedIndexes';
   const db = getFirestore();
+  const openingRef = doc(db, 'users', uid, 'openings', openingID);
 
   try {
-    await updateDoc(doc(db, 'users', uid, 'openings', openingID), {
-      [fieldName]: updatedUsedIndexesArray,
-    });
-    console.log(`Updated ${fieldName} for openingID: ${openingID}`);
+    const openingDoc = await getDoc(openingRef);
+
+    if (openingDoc.exists()) {
+      const openingData = openingDoc.data();
+
+      if (openingData[openingName]) {
+        openingData[openingName][fieldName] = updatedUsedIndexesArray;
+
+        await updateDoc(openingRef, openingData);
+        console.log(`Updated ${fieldName} for openingID: ${openingID}, openingName: ${openingName}`);
+      } else {
+        console.error(`Opening name ${openingName} not found in openingID: ${openingID}`);
+      }
+    } else {
+      console.error(`OpeningID ${openingID} not found for uid: ${uid}`);
+    }
   } catch (error) {
     console.error('Error updating used indexes:', error);
-  } 
+  }
 }
 
 // Get the current user's ID
@@ -119,16 +131,10 @@ function getCurrentUserId() {
   const user = auth.currentUser;
 
   if (user) {
+    console.log(user.uid);
     return user.uid;
   } else {
     console.log("No user is signed in.");
     return null;
   }
-}
-
-const uid = getCurrentUserId();
-if (uid) {
-  updateOpeningUsedIndexes(uid, openingID, color, updatedUsedIndexesArray);
-} else {
-  console.error("User not signed in. Unable to update used indexes.");
 }

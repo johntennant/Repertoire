@@ -1,5 +1,6 @@
-// This function takes an array of strings and returns a random string from that array.
-// It also takes an array of integers that represent the indexes of the strings that have been previously picked.
+// This function takes an array of strings and returns a random string from that array. 
+// It also takes an array of integers that are the indexes of the strings that have been previously picked.
+// So it will not pick the same string until all the strings have been picked.
 // It returns an object with two properties: the string that was picked and the updated array of used indexes.
  
 export function shufflePickString(usedIndexesArrayInt, stringArray) {
@@ -27,7 +28,7 @@ export function shufflePickString(usedIndexesArrayInt, stringArray) {
 
   // You can decide if you still want to store the last picked string in localStorage.
   // If not, you can remove this line.
-  localStorage.setItem("lastStringPicked", string);
+  //localStorage.setItem("lastStringPicked", string);
 
   return {
     pickedString: string,
