@@ -12,32 +12,8 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-auth
 import { handleOpeningButtonClick } from './openingButtons.js';
 import { shufflePickString } from './shuffleFromArrayAndStoreHistory.js'; 
 import { openURLorPGN } from './handleUrlDrillOrPgnLine.js';
+import { flagLastDrill, removeLastFlaggedDrill } from "./flaggedDrills";
 
-// Is needed anymore? (see below)
-// export const getUserData = async (uid) => {
-//   try {
-//     const db = getFirestore();
-//     const userRef = doc(collection(db, "users"), uid);
-//     const userDoc = await getDoc(userRef);
-
-//     if (userDoc.exists()) {
-//       console.log("User data:", userDoc.data());
-//       return userDoc.data();
-//     } else {
-//       console.log("No such user found.");
-//       return null;
-//     }
-//   } catch (error) {
-//     console.error("Error fetching user data:", error);
-//     return null;
-//   }
-// };
-
-// Creates a button for each opening in the user's openings collection
-// and registers a click event listener for the button
-// The click event listener calls the handleOpeningButtonClick function
-// with the opening data and returns the selected opening line
-// and the updates the used indexes array.
 
 async function createOpeningButton(openingName, openingData) {
   const button = document.createElement("button");
@@ -45,14 +21,14 @@ async function createOpeningButton(openingName, openingData) {
   button.classList.add("opening-button");
   button.addEventListener("click", async () => {
     const uid = getCurrentUserId();
-    const openingID = 'openingID';
+    // const openingID = 'openingID';
 
     const fetchedDataResult = await handleOpeningButtonClick(uid, openingName);
     const selectedOpeningLines = fetchedDataResult.lines;
     console.log("Selected Opening Lines:", selectedOpeningLines);
     const selectedOpeningUsedIndexes = fetchedDataResult.usedIndexes;
 
-    const shuffleResult = shufflePickString(selectedOpeningLines, selectedOpeningUsedIndexes);
+    const shuffleResult = shufflePickString(selectedOpeningUsedIndexes, selectedOpeningLines);
     const selectedOpeningLine = shuffleResult.pickedString;
     console.log("From userDataInteractions.js, Selected Opening Line:", selectedOpeningLine);
 
@@ -61,7 +37,7 @@ async function createOpeningButton(openingName, openingData) {
     console.log("From userDataInteractions.js, Color Key:", colorKey);
 
     openURLorPGN(selectedOpeningLine);
-    updateOpeningUsedIndexes(uid, openingID, openingName, colorKey, updatedUsedIndexesArray);
+    updateOpeningUsedIndexes(uid, openingName, colorKey, updatedUsedIndexesArray);
   });
   return button;
 }
@@ -69,8 +45,47 @@ async function createOpeningButton(openingName, openingData) {
 
 // When a user logs in, the opening data is retrieved
 // and a button is created for each opening in the opening data.
-
 // Too many nested loops.  Can we simplify this?
+
+// export const getOpeningData = async (uid) => {
+//   try {
+//     const db = getFirestore();
+//     const openingsContainer = document.getElementById("openings-container");
+
+//     // Fetch data from both "asWhite" and "asBlack" documents
+//     const docRefs = [
+//       doc(db, "users", uid, "openings", "asWhite"),
+//       doc(db, "users", uid, "openings", "asBlack"),
+//     ];
+
+//     const docSnapshots = await Promise.all(docRefs.map((ref) => getDoc(ref)));
+
+//     for (const docSnapshot of docSnapshots) {
+//       if (docSnapshot.exists()) {
+//         console.log("Opening data:", docSnapshot.data());
+
+//         // Show the openings container (which contains the buttons for each opening).
+//         openingsContainer.style.display = "block";
+//         const openingData = docSnapshot.data();
+
+//         const openingNames = Object.keys(openingData).filter((openingName) => {
+//           return !openingName.endsWith("UsedIndexes") && openingName !== "FlaggedDrills";
+//         });
+
+//         for (const openingName of openingNames) {
+//           const openingButton = await createOpeningButton(openingName, openingData);
+//           openingsContainer.appendChild(openingButton); // Add the button to the DOM
+//         }
+//       } else {
+//         console.log(`No opening data found for ${
+//           docSnapshots.indexOf(docSnapshot) === 0 ? "asWhite" : "asBlack"
+//         }.`);
+//       }
+//     }
+//   } catch (error) {
+//     console.error("Error fetching opening data:", error);
+//   }
+// };
 
 export const getOpeningData = async (uid) => {
   try {
@@ -85,7 +100,9 @@ export const getOpeningData = async (uid) => {
 
     const docSnapshots = await Promise.all(docRefs.map((ref) => getDoc(ref)));
 
-    for (const docSnapshot of docSnapshots) {
+    let flaggedDrillsAdded = false;
+
+    for (const [index, docSnapshot] of docSnapshots.entries()) {
       if (docSnapshot.exists()) {
         console.log("Opening data:", docSnapshot.data());
 
@@ -93,37 +110,65 @@ export const getOpeningData = async (uid) => {
         openingsContainer.style.display = "block";
         const openingData = docSnapshot.data();
 
-        const openingNames = Object.keys(openingData).filter((openingName) => {
-          return !openingName.endsWith("UsedIndexes") && openingName !== "FlaggedDrills";
-        });
-
-        for (const openingName of openingNames) {
+        for (const openingName in openingData) {
+          // Loop through the openings
+          if (openingName.endsWith("UsedIndexes")) continue; // Skip the UsedIndexes arrays
+          if (openingName === "FlaggedDrills") {
+            if (!flaggedDrillsAdded) {
+              const flaggedDrillsButton = await createOpeningButton(openingName, openingData);
+              flaggedDrillsButton.classList.add("flagged-drills-button"); // Add a class for styling
+              openingsContainer.appendChild(flaggedDrillsButton); // Add the button to the DOM
+              flaggedDrillsAdded = true;
+            }
+            continue; // Skip the FlaggedDrills arrays
+          }
           const openingButton = await createOpeningButton(openingName, openingData);
           openingsContainer.appendChild(openingButton); // Add the button to the DOM
         }
       } else {
         console.log(`No opening data found for ${
-          docSnapshots.indexOf(docSnapshot) === 0 ? "asWhite" : "asBlack"
+          index === 0 ? "asWhite" : "asBlack"
         }.`);
       }
     }
+
+    const flagLastDrillButton = document.createElement("button");
+    flagLastDrillButton.textContent = "Flag Last Drill";
+    flagLastDrillButton.classList.add("flag-last-drill-button");
+    openingsContainer.appendChild(flagLastDrillButton);
+
+    // Add event listener for "Flag Last Drill" button
+    flagLastDrillButton.addEventListener("click", async () => {
+      await flagLastDrill(getCurrentUserId());
+    });
+
+    const removeLastFlaggedDrillButton = document.createElement("button");
+    removeLastFlaggedDrillButton.textContent = "Remove Last Flagged Drill";
+    removeLastFlaggedDrillButton.classList.add(
+      "remove-last-flagged-drill-button"
+    );
+    openingsContainer.appendChild(removeLastFlaggedDrillButton);
+
+    // Add event listener for "Remove Last Flagged Drill" button
+    removeLastFlaggedDrillButton.addEventListener("click", async () => {
+      await removeLastFlaggedDrill(getCurrentUserId());
+    });
+
   } catch (error) {
     console.error("Error fetching opening data:", error);
   }
 };
 
 
-
 // This updates the used indexes array for the opening that was clicked on.
-// It should be: users [colleciton] > uid [document] > openings [collection] > openingID [document] > [name-of-the-opening][map] > "asWhiteUsedIndexes" or "asBlackUsedIndexes" [array]
-async function updateOpeningUsedIndexes(uid, openingID, openingName, color, updatedUsedIndexesArray) {
+async function updateOpeningUsedIndexes(uid, openingName, color, updatedUsedIndexesArray) {
   if (color !== 'asWhite' && color !== 'asBlack') {
     console.error('Invalid color. Please provide "asWhite" or "asBlack" as the color argument.');
     return;
   }
 
   const db = getFirestore();
-  const openingRef = doc(db, 'users', uid, 'openings', openingID);
+  const openingRef = doc(db, 'users', uid, 'openings', color);
 
   try {
     const openingDoc = await getDoc(openingRef);
@@ -132,14 +177,13 @@ async function updateOpeningUsedIndexes(uid, openingID, openingName, color, upda
       const openingData = openingDoc.data();
 
       if (openingData[openingName]) {
-        const usedIndexesRef = doc(db, 'users', uid, 'openings', openingID, openingName + 'UsedIndexes');
-        await updateDoc(usedIndexesRef, { indexes: updatedUsedIndexesArray });
-        console.log(`Updated used indexes for openingID: ${openingID}, openingName: ${openingName}`);
+        await updateDoc(openingRef, { [openingName + 'UsedIndexes']: updatedUsedIndexesArray });
+        console.log(`Updated used indexes for openingName: ${openingName}, color: ${color}`);
       } else {
-        console.error(`Opening name ${openingName} not found in openingID: ${openingID}`);
+        console.error(`Opening name ${openingName} not found in color: ${color}`);
       }
     } else {
-      console.error(`OpeningID ${openingID} not found for uid: ${uid}`);
+      console.error(`Color ${color} not found for uid: ${uid}`);
     }
   } catch (error) {
     console.error('Error updating used indexes:', error);

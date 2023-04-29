@@ -10,30 +10,40 @@ async function fetchOpeningData(uid, openingName) {
     const db = getFirestore();
     const openingsRef = collection(db, "users", uid, "openings");
     const asWhiteDocRef = doc(openingsRef, "asWhite");
+    const asBlackDocRef = doc(openingsRef, "asBlack");
 
-    const asWhiteDocSnapshot = await getDoc(asWhiteDocRef);
-    const asWhiteData = asWhiteDocSnapshot.data();
+    const [asWhiteDocSnapshot, asBlackDocSnapshot] = await Promise.all([
+      getDoc(asWhiteDocRef),
+      getDoc(asBlackDocRef),
+    ]);
 
-    console.log("asWhiteData:", asWhiteData);
-    console.log("openingName:", openingName);
+    const asWhiteData = asWhiteDocSnapshot.data() || {};
+    const asBlackData = asBlackDocSnapshot.data() || {};
 
     const openingLinesAsWhite = asWhiteData[openingName] || [];
     const usedIndexesAsWhite = asWhiteData[openingName + "UsedIndexes"] || [];
 
-    console.log("openingLinesAsWhite:", openingLinesAsWhite);
-    console.log("usedIndexesAsWhite:", usedIndexesAsWhite);
+    const openingLinesAsBlack = asBlackData[openingName] || [];
+    const usedIndexesAsBlack = asBlackData[openingName + "UsedIndexes"] || [];
+
+    const colorKey = openingLinesAsWhite.length > 0 ? "asWhite" : "asBlack";
+
+    const openingLines = colorKey === "asWhite" ? openingLinesAsWhite : openingLinesAsBlack;
+    const usedIndexes = colorKey === "asWhite" ? usedIndexesAsWhite : usedIndexesAsBlack;
+
+    console.log("Opening Lines:", openingLines);
+    console.log("Used Indexes:", usedIndexes);
 
     return {
-      lines: openingLinesAsWhite,
-      usedIndexes: usedIndexesAsWhite,
+      lines: openingLines,
+      usedIndexes: usedIndexes,
+      colorKey: colorKey,
     };
   } catch (error) {
     console.error("Error fetching opening data:", error);
     return null;
   }
 }
-
-
 
 export async function handleOpeningButtonClick(uid, openingName) {
   // Fetch the opening data using the helper function
@@ -43,10 +53,10 @@ export async function handleOpeningButtonClick(uid, openingName) {
   // Log the opening data for debugging purposes
   console.log("Opening data for", openingName, ":", openingData);
 
-  // Extract the selected opening lines and used indexes
+  // Extract the selected opening lines, used indexes, and color key
   const selectedOpeningLines = openingData.lines;
   const selectedOpeningUsedIndexes = openingData.usedIndexes;
-  const colorKey = "asWhite";
+  const colorKey = openingData.colorKey;
 
   // Log the selected opening lines, used indexes, and color key for debugging purposes
   console.log("Selected Opening Lines:", selectedOpeningLines);
@@ -60,3 +70,4 @@ export async function handleOpeningButtonClick(uid, openingName) {
     colorKey: colorKey,
   };
 }
+

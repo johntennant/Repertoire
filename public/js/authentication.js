@@ -57,7 +57,7 @@ onAuthStateChanged(auth, (user) => {
     //Hide the login form
     loginForm.style.display = "none";
     // Get the user data and make the buttons. 
-    getOpeningData(user.uid, "openingID")
+    getOpeningData(user.uid,)
 
   } else { // User is signed out or there is no user signed in
 
