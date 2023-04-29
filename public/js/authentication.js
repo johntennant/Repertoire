@@ -1,5 +1,5 @@
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js";
-import { getUserData, getOpeningData } from "./userDataInteractions.js";
+import { getOpeningData } from "./userDataInteractions.js";
 const app = window.app;
 const auth = getAuth(app);
  
@@ -8,7 +8,7 @@ const loginForm = document.getElementById("login-form");
 const loginBtn = document.getElementById("login-btn");
 const signupBtn = document.getElementById("signup-btn");
 const logoutBtn = document.getElementById("logout-btn");
-const getUserDataBtn = document.getElementById("get-user-data-btn");
+//const getUserDataBtn = document.getElementById("get-user-data-btn");
 
 // Function to handle user sign-up
 const signUp = async (email, password) => {
@@ -56,6 +56,8 @@ onAuthStateChanged(auth, (user) => {
     
     //Hide the login form
     loginForm.style.display = "none";
+    // Get the user data and make the buttons. 
+    getOpeningData(user.uid, "openingID")
 
   } else { // User is signed out or there is no user signed in
 
@@ -83,13 +85,13 @@ const logOut = async () => {
 logoutBtn.addEventListener("click", logOut);
 
 // Add event listener for get user data button click
-getUserDataBtn.addEventListener("click", () => {
-  const user = auth.currentUser;
-  if (user) {
-    // const userData = getUserData(user.uid);
-    const userData = getOpeningData(user.uid, "openingID");
-    console.log("Fetched user data:", userData);
-  } else {
-    console.log("No user is signed in.");
-  }
-});
+// getUserDataBtn.addEventListener("click", () => {
+//   const user = auth.currentUser;
+//   if (user) {
+//     // const userData = getUserData(user.uid);
+//     const userData = getOpeningData(user.uid, "openingID");
+//     console.log("Fetched user data:", userData);
+//   } else {
+//     console.log("No user is signed in.");
+//   }
+// });
