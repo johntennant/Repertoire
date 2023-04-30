@@ -45,7 +45,7 @@ async function fetchOpeningData(uid, openingName) {
   }
 }
 
-export async function handleOpeningButtonClick(uid, openingName) {
+export async function handleOpeningButtonClick(uid, openingName, passedColorKey = null) {
   // Fetch the opening data using the helper function
   const openingData = await fetchOpeningData(uid, openingName);
   console.log("Fetched opening data:", openingData);
@@ -56,7 +56,7 @@ export async function handleOpeningButtonClick(uid, openingName) {
   // Extract the selected opening lines, used indexes, and color key
   const selectedOpeningLines = openingData.lines;
   const selectedOpeningUsedIndexes = openingData.usedIndexes;
-  const colorKey = openingData.colorKey;
+  const colorKey = passedColorKey || openingData.colorKey;
 
   // Log the selected opening lines, used indexes, and color key for debugging purposes
   console.log("Selected Opening Lines:", selectedOpeningLines);
@@ -70,4 +70,5 @@ export async function handleOpeningButtonClick(uid, openingName) {
     colorKey: colorKey,
   };
 }
+
 

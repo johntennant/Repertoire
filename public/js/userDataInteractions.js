@@ -12,18 +12,20 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-auth
 import { handleOpeningButtonClick } from './openingButtons.js';
 import { shufflePickString } from './shuffleFromArrayAndStoreHistory.js'; 
 import { openURLorPGN } from './handleUrlDrillOrPgnLine.js';
-import { flagLastDrill, removeLastFlaggedDrill } from "./flaggedDrills";
+import { flagLastDrill, removeLastFlaggedDrill } from "./flaggedDrillsAddRemove.js";
 
+let lastSelectedOpeningLineObj = null;
 
-async function createOpeningButton(openingName, openingData) {
+//FlaggedDrills still only works for one color. 
+async function createOpeningButton(openingName, openingData, colorKey = null) {
   const button = document.createElement("button");
   button.textContent = openingName;
   button.classList.add("opening-button");
   button.addEventListener("click", async () => {
     const uid = getCurrentUserId();
-    // const openingID = 'openingID';
-
-    const fetchedDataResult = await handleOpeningButtonClick(uid, openingName);
+    const colorKey = fetchedDataResult.colorKey;
+    const fetchedDataResult = await handleOpeningButtonClick(uid, openingName, colorKey);
+    // const fetchedDataResult = await handleOpeningButtonClick(uid, openingName);
     const selectedOpeningLines = fetchedDataResult.lines;
     console.log("Selected Opening Lines:", selectedOpeningLines);
     const selectedOpeningUsedIndexes = fetchedDataResult.usedIndexes;
@@ -33,59 +35,23 @@ async function createOpeningButton(openingName, openingData) {
     console.log("From userDataInteractions.js, Selected Opening Line:", selectedOpeningLine);
 
     const updatedUsedIndexesArray = shuffleResult.updatedUsedIndexes;
-    const colorKey = fetchedDataResult.colorKey;
+    
     console.log("From userDataInteractions.js, Color Key:", colorKey);
 
     openURLorPGN(selectedOpeningLine);
     updateOpeningUsedIndexes(uid, openingName, colorKey, updatedUsedIndexesArray);
+
+    // Update the global variable with the selected opening line
+
+    lastSelectedOpeningLineObj = {
+      pgn: selectedOpeningLine,
+      openingName,
+      colorKey,
+    };
   });
   return button;
 }
 
-
-// When a user logs in, the opening data is retrieved
-// and a button is created for each opening in the opening data.
-// Too many nested loops.  Can we simplify this?
-
-// export const getOpeningData = async (uid) => {
-//   try {
-//     const db = getFirestore();
-//     const openingsContainer = document.getElementById("openings-container");
-
-//     // Fetch data from both "asWhite" and "asBlack" documents
-//     const docRefs = [
-//       doc(db, "users", uid, "openings", "asWhite"),
-//       doc(db, "users", uid, "openings", "asBlack"),
-//     ];
-
-//     const docSnapshots = await Promise.all(docRefs.map((ref) => getDoc(ref)));
-
-//     for (const docSnapshot of docSnapshots) {
-//       if (docSnapshot.exists()) {
-//         console.log("Opening data:", docSnapshot.data());
-
-//         // Show the openings container (which contains the buttons for each opening).
-//         openingsContainer.style.display = "block";
-//         const openingData = docSnapshot.data();
-
-//         const openingNames = Object.keys(openingData).filter((openingName) => {
-//           return !openingName.endsWith("UsedIndexes") && openingName !== "FlaggedDrills";
-//         });
-
-//         for (const openingName of openingNames) {
-//           const openingButton = await createOpeningButton(openingName, openingData);
-//           openingsContainer.appendChild(openingButton); // Add the button to the DOM
-//         }
-//       } else {
-//         console.log(`No opening data found for ${
-//           docSnapshots.indexOf(docSnapshot) === 0 ? "asWhite" : "asBlack"
-//         }.`);
-//       }
-//     }
-//   } catch (error) {
-//     console.error("Error fetching opening data:", error);
-//   }
-// };
 
 export const getOpeningData = async (uid) => {
   try {
@@ -101,6 +67,7 @@ export const getOpeningData = async (uid) => {
     const docSnapshots = await Promise.all(docRefs.map((ref) => getDoc(ref)));
 
     let flaggedDrillsAdded = false;
+    let nextColorKey = "asWhite"; // Initialize nextColorKey
 
     for (const [index, docSnapshot] of docSnapshots.entries()) {
       if (docSnapshot.exists()) {
@@ -115,20 +82,31 @@ export const getOpeningData = async (uid) => {
           if (openingName.endsWith("UsedIndexes")) continue; // Skip the UsedIndexes arrays
           if (openingName === "FlaggedDrills") {
             if (!flaggedDrillsAdded) {
-              const flaggedDrillsButton = await createOpeningButton(openingName, openingData);
+              const colorKey = nextColorKey; // Set the current colorKey
+              const flaggedDrillsButton = await createOpeningButton(
+                openingName,
+                openingData,
+                colorKey
+              );
               flaggedDrillsButton.classList.add("flagged-drills-button"); // Add a class for styling
               openingsContainer.appendChild(flaggedDrillsButton); // Add the button to the DOM
               flaggedDrillsAdded = true;
+
+              // Toggle the next colorKey between "asWhite" and "asBlack"
+              nextColorKey = colorKey === "asWhite" ? "asBlack" : "asWhite";
             }
             continue; // Skip the FlaggedDrills arrays
           }
-          const openingButton = await createOpeningButton(openingName, openingData);
+          const openingButton = await createOpeningButton(
+            openingName,
+            openingData
+          );
           openingsContainer.appendChild(openingButton); // Add the button to the DOM
         }
       } else {
-        console.log(`No opening data found for ${
-          index === 0 ? "asWhite" : "asBlack"
-        }.`);
+        console.log(
+          `No opening data found for ${index === 0 ? "asWhite" : "asBlack"}.`
+        );
       }
     }
 
@@ -137,11 +115,6 @@ export const getOpeningData = async (uid) => {
     flagLastDrillButton.classList.add("flag-last-drill-button");
     openingsContainer.appendChild(flagLastDrillButton);
 
-    // Add event listener for "Flag Last Drill" button
-    flagLastDrillButton.addEventListener("click", async () => {
-      await flagLastDrill(getCurrentUserId());
-    });
-
     const removeLastFlaggedDrillButton = document.createElement("button");
     removeLastFlaggedDrillButton.textContent = "Remove Last Flagged Drill";
     removeLastFlaggedDrillButton.classList.add(
@@ -149,11 +122,16 @@ export const getOpeningData = async (uid) => {
     );
     openingsContainer.appendChild(removeLastFlaggedDrillButton);
 
-    // Add event listener for "Remove Last Flagged Drill" button
-    removeLastFlaggedDrillButton.addEventListener("click", async () => {
-      await removeLastFlaggedDrill(getCurrentUserId());
+    // Add event listener for "Flag Last Drill" button
+    flagLastDrillButton.addEventListener("click", async () => {
+      await flagLastDrill(getCurrentUserId(), lastSelectedOpeningLineObj);
+      console.log("Flagged last drill! "+lastSelectedOpeningLineObj);
     });
 
+    // Add event listener for "Remove Last Flagged Drill" button
+    removeLastFlaggedDrillButton.addEventListener("click", async () => {
+      await removeLastFlaggedDrill(getCurrentUserId(), lastSelectedOpeningLineObj);
+    });
   } catch (error) {
     console.error("Error fetching opening data:", error);
   }
