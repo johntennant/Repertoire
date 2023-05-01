@@ -16,7 +16,7 @@ import { flagLastDrill, removeLastFlaggedDrill } from "./flaggedDrillsAddRemove.
 
 let lastSelectedOpeningLineObj = null;
 
-async function createOpeningButton(openingName, openingData, colorKey = null) {
+async function createOpeningButton(openingName, openingData, colorKey) {
   const button = document.createElement("button");
   button.textContent = openingName;
   button.classList.add("opening-button");
@@ -64,9 +64,6 @@ export const getOpeningData = async (uid) => {
 
     const docSnapshots = await Promise.all(docRefs.map((ref) => getDoc(ref)));
 
-    let flaggedDrillsAdded = false;
-    let nextColorKey = "asWhite"; // Initialize nextColorKey
-
     for (const [index, docSnapshot] of docSnapshots.entries()) {
       if (docSnapshot.exists()) {
         console.log("Opening data:", docSnapshot.data());
@@ -79,32 +76,19 @@ export const getOpeningData = async (uid) => {
           // Loop through the openings
           if (openingName.endsWith("UsedIndexes")) continue; // Skip the UsedIndexes arrays
           if (openingName === "FlaggedDrills") {
-            if (!flaggedDrillsAdded) {
-              const colorKey = nextColorKey; // Set the current colorKey
-              const flaggedDrillsButton = await createOpeningButton(
-                openingName,
-                openingData,
-                colorKey
-              );
-              flaggedDrillsButton.classList.add("flagged-drills-button"); // Add a class for styling
-              openingsContainer.appendChild(flaggedDrillsButton); // Add the button to the DOM
-              flaggedDrillsAdded = true;
-
-              // Toggle the next colorKey between "asWhite" and "asBlack"
-              nextColorKey = colorKey === "asWhite" ? "asBlack" : "asWhite";
-            }
-            continue; // Skip the FlaggedDrills arrays
+            // Create a FlaggedDrills button for the current color (asWhite or asBlack)
+            const colorKey = index === 0 ? "asWhite" : "asBlack";
+            const flaggedDrillsButton = await createOpeningButton(openingName, openingData[colorKey], colorKey);
+            flaggedDrillsButton.classList.add("flagged-drills-button"); // Add a class for styling
+            openingsContainer.appendChild(flaggedDrillsButton); // Add the button to the DOM
+          } else {
+            const colorKey = index === 0 ? "asWhite" : "asBlack";
+            const openingButton = await createOpeningButton(openingName, openingData, colorKey);
+            openingsContainer.appendChild(openingButton); // Add the button to the DOM
           }
-          const openingButton = await createOpeningButton(
-            openingName,
-            openingData
-          );
-          openingsContainer.appendChild(openingButton); // Add the button to the DOM
         }
       } else {
-        console.log(
-          `No opening data found for ${index === 0 ? "asWhite" : "asBlack"}.`
-        );
+        console.log(`No opening data found for ${index === 0 ? "asWhite" : "asBlack"}.`);
       }
     }
 
@@ -134,6 +118,7 @@ export const getOpeningData = async (uid) => {
     console.error("Error fetching opening data:", error);
   }
 };
+
 
 
 // This updates the used indexes array for the opening that was clicked on.
