@@ -16,14 +16,12 @@ import { flagLastDrill, removeLastFlaggedDrill } from "./flaggedDrillsAddRemove.
 
 let lastSelectedOpeningLineObj = null;
 
-//FlaggedDrills still only works for one color. 
 async function createOpeningButton(openingName, openingData, colorKey = null) {
   const button = document.createElement("button");
   button.textContent = openingName;
   button.classList.add("opening-button");
   button.addEventListener("click", async () => {
     const uid = getCurrentUserId();
-    const colorKey = fetchedDataResult.colorKey;
     const fetchedDataResult = await handleOpeningButtonClick(uid, openingName, colorKey);
     // const fetchedDataResult = await handleOpeningButtonClick(uid, openingName);
     const selectedOpeningLines = fetchedDataResult.lines;
