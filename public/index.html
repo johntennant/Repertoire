@@ -59,6 +59,10 @@
       #manage-openings-container {
       display: none; /* Initially hidden */
       }
+      
+      .opening-button {
+        margin: 3px;
+      }
 
       /* #manage-openings-container button {
       /* Add your desired button styles here */
@@ -92,6 +96,11 @@
         text-align: center;
       }
 
+      .hidden {
+        display: none;
+      }
+
+
     </style>
   </head>
  
@@ -113,7 +122,12 @@
     <div id="flagged-drills-container" class="container"></div>
     <div id="openings-for-white-container" class="container"></div>
     <div id="openings-for-black-container" class="container"></div>
-    <div id="flagged-drills-interact-container" class="container"></div>
+    <div id="flagged-drills-interact-container" class="container">
+      <button type="button" id="flag-last-drill-button">Flag Last Drill</button>
+      <button id="remove-last-flagged-drill-btn" class="hidden">Remove Last Flagged Drill</button>
+
+
+    </div>
     <div id="manage-openings-container" class="container">
       <button type="button" id="import-new-opening-btn">Import New Opening</button>
       <button type="button" id="remove-opening-btn">Remove Opening</button>
@@ -151,6 +165,7 @@
     <script type="module" src="https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js"></script>
     <script type="module" src="js/authentication.js"></script>
     <script type="module" src="js/manageOpenings.js"></script>
+    <script type="module" src="js/uiFeedback.js"></script>
     
     <!-- Modal structure for removing an opening -->
     <div id="remove-opening-modal" class="modal">

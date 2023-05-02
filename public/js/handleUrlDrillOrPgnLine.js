@@ -8,9 +8,10 @@ export function openURLorPGN(string) {
   } else {
     const pgnString = string;
     const encodedPgnString = encodeURIComponent(pgnString);
-    const urlPlusPGN = `https://www.johntennant.com/PGNChessDrilljs/mPGNPlaybackChessboard.html?pgn=${encodedPgnString}`;
-
+    // const urlPlusPGN = `https://www.johntennant.com/PGNChessDrilljs/mPGNPlaybackChessboard.html?pgn=${encodedPgnString}`;
+    const urlPlusPGN = `RepetoireChessboard.html?pgn=${encodedPgnString}`;
     // Load the URL in the same tab
     window.location.href = urlPlusPGN;
+    // window.open(urlPlusPGN, '_blank');
   }
 }

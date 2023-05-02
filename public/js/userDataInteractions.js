@@ -33,34 +33,30 @@ async function createOpeningButton(openingName, colorKey) {
     const selectedOpeningLines = fetchedDataResult.lines;
     console.log("Selected Opening Lines:", selectedOpeningLines);
     const selectedOpeningUsedIndexes = fetchedDataResult.usedIndexes;
-
+  
     const shuffleResult = shufflePickString(selectedOpeningUsedIndexes, selectedOpeningLines);
     const selectedOpeningLine = shuffleResult.pickedString;
     console.log("From userDataInteractions.js, Selected Opening Line:", selectedOpeningLine);
-
-    const updatedUsedIndexesArray = shuffleResult.updatedUsedIndexes;
     
+    const updatedUsedIndexesArray = shuffleResult.updatedUsedIndexes;
+  
     console.log("From userDataInteractions.js, Color Key:", colorKey);
-
-    openURLorPGN(selectedOpeningLine);
-    updateOpeningUsedIndexes(uid, openingName, colorKey, updatedUsedIndexesArray);
-
+  
     // Update the global variable with the selected opening line
-
     lastSelectedOpeningLineObj = {
       pgn: selectedOpeningLine,
       openingName,
       colorKey,
     };
+    localStorage.setItem('lastSelectedOpeningLineObj', JSON.stringify(lastSelectedOpeningLineObj));
+  
+    // Await the Firestore update and then open the URL
+    await updateOpeningUsedIndexes(uid, openingName, colorKey, updatedUsedIndexesArray);
+    openURLorPGN(selectedOpeningLine);
   });
+  
   return button;
 }
-
-// const createFlaggedDrillsButton = async (openingName, colorKey) => {
-//   const flaggedDrillsButton = await createOpeningButton(openingName, colorKey);
-//   flaggedDrillsButton.classList.add("flagged-drills-button");
-//   return flaggedDrillsButton;
-// };
 
 const createButtonsForOpenings = async (openingData, colorKey) => {
   const buttons = [];
@@ -142,23 +138,38 @@ export const buildUsersOpeningsUI = async (uid) => {
 
     flaggedDrillsContainer.style.display = "block";
 
-    const flagLastDrillButton = document.createElement("button");
-    flagLastDrillButton.textContent = "Flag Last Drill";
-    flagLastDrillButton.classList.add("flag-last-drill-button");
+    const flagLastDrillButton = document.getElementById("flag-last-drill-button");
+    // flagLastDrillButton.textContent = "Flag Last Drill";
+    // flagLastDrillButton.classList.add("flag-last-drill-button");
     flaggedDrillsInteractContainer.appendChild(flagLastDrillButton);
 
-    const removeLastFlaggedDrillButton = document.createElement("button");
-    removeLastFlaggedDrillButton.textContent = "Remove Last Flagged Drill";
-    removeLastFlaggedDrillButton.classList.add("remove-last-flagged-drill-button");
-    flaggedDrillsInteractContainer.appendChild(removeLastFlaggedDrillButton);
+    // const removeLastFlaggedDrillButton = document.createElement("button");
+    const removeLastFlaggedDrillButton = document.getElementById("remove-last-flagged-drill-btn");
+    // removeLastFlaggedDrillButton.textContent = "Remove Last Flagged Drill";
+    // removeLastFlaggedDrillButton.classList.add("remove-last-flagged-drill-button");
+    // flaggedDrillsInteractContainer.appendChild(removeLastFlaggedDrillButton);
+
+    // After building the UI, check the lastSelectedOpeningLineObj
+  const lastSelectedOpeningLineObjString = localStorage.getItem('lastSelectedOpeningLineObj');
+  if (lastSelectedOpeningLineObjString) {
+    const lastSelectedOpeningLineObj = JSON.parse(lastSelectedOpeningLineObjString);
+    const removeLastFlaggedDrillButton = document.getElementById("remove-last-flagged-drill-btn");
+
+    if (lastSelectedOpeningLineObj.openingName === "FlaggedDrills") {
+      removeLastFlaggedDrillButton.classList.remove("hidden");
+      flagLastDrillButton.classList.add("hidden");
+    } else {
+      removeLastFlaggedDrillButton.classList.add("hidden");
+      flagLastDrillButton.classList.remove("hidden");
+    }}
 
     flagLastDrillButton.addEventListener("click", async () => {
-      await flagLastDrill(getCurrentUserId(), lastSelectedOpeningLineObj);
+      await flagLastDrill(getCurrentUserId());
       console.log("Flagged last drill! " + lastSelectedOpeningLineObj);
     });
 
     removeLastFlaggedDrillButton.addEventListener("click", async () => {
-      await removeLastFlaggedDrill(getCurrentUserId(), lastSelectedOpeningLineObj);
+      await removeLastFlaggedDrill(getCurrentUserId());
     });
   } catch (error) {
     console.error("Error fetching opening data:", error);
