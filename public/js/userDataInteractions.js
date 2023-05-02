@@ -15,10 +15,21 @@ import { openURLorPGN } from './handleUrlDrillOrPgnLine.js';
 import { flagLastDrill, removeLastFlaggedDrill } from "./flaggedDrillsAddRemove.js";
 
 let lastSelectedOpeningLineObj = null;
+const openingsForWhiteContainer = document.getElementById("openings-for-white-container");
+const openingsForBlackContainer = document.getElementById("openings-for-black-container");
+const flaggedDrillsContainer = document.getElementById("flagged-drills-container");
+const flaggedDrillsInteractContainer = document.getElementById("flagged-drills-interact-container");
 
-async function createOpeningButton(openingName, openingData, colorKey) {
+async function createOpeningButton(openingName, colorKey) {
   const button = document.createElement("button");
-  button.textContent = openingName;
+  // Use the opening name as the button text, unless it's "FlaggedDrills"
+  // In that case, use "Flagged Drills for White" or "Flagged Drills for Black"
+  if (openingName === "FlaggedDrills") {
+    button.textContent = `Flagged Drills for ${colorKey === "asWhite" ? "White" : "Black"}`;
+  } else {
+    button.textContent = openingName;
+  }
+
   button.classList.add("opening-button");
   button.addEventListener("click", async () => {
     const uid = getCurrentUserId();
@@ -50,75 +61,91 @@ async function createOpeningButton(openingName, openingData, colorKey) {
   return button;
 }
 
+const createFlaggedDrillsButton = async (openingName, colorKey) => {
+  const flaggedDrillsButton = await createOpeningButton(openingName, colorKey);
+  flaggedDrillsButton.classList.add("flagged-drills-button");
+  return flaggedDrillsButton;
+};
+
+const createButtonsForOpenings = async (openingData, colorKey) => {
+  const buttons = [];
+
+  for (const openingName in openingData) {
+    if (openingName.endsWith("UsedIndexes")) continue;
+
+    if (openingName === "FlaggedDrills") {
+      const flaggedDrillsButton = await createOpeningButton(openingName, colorKey);
+      flaggedDrillsButton.classList.add("flagged-drills-button"); // Add a class for styling
+      flaggedDrillsContainer.appendChild(flaggedDrillsButton); // Add the button to the DOM
+    } else {
+      const openingButton = await createOpeningButton(openingName, colorKey);
+      if (colorKey === "asWhite") {
+        openingsForWhiteContainer.appendChild(openingButton); // Add the button to the DOM
+      } else {
+        openingsForBlackContainer.appendChild(openingButton); // Add the button to the DOM
+      }
+    }
+    
+  }
+
+  return buttons;
+};
+
+const processDocSnapshot = async (docSnapshot, colorKey) => {
+  if (!docSnapshot.exists()) {
+    console.log(`No opening data found for ${colorKey}.`);
+    return [];
+  }
+
+  console.log("Opening data:", docSnapshot.data());
+  const openingData = docSnapshot.data();
+  const buttons = await createButtonsForOpenings(openingData, colorKey);
+  return buttons;
+};
 
 export const getOpeningData = async (uid) => {
   try {
     const db = getFirestore();
     const openingsContainer = document.getElementById("openings-container");
-
-    // Fetch data from both "asWhite" and "asBlack" documents
+    
     const docRefs = [
       doc(db, "users", uid, "openings", "asWhite"),
       doc(db, "users", uid, "openings", "asBlack"),
-    ];
+    ]; 
 
     const docSnapshots = await Promise.all(docRefs.map((ref) => getDoc(ref)));
+    const colorKeys = ["asWhite", "asBlack"];
 
     for (const [index, docSnapshot] of docSnapshots.entries()) {
-      if (docSnapshot.exists()) {
-        console.log("Opening data:", docSnapshot.data());
-
-        // Show the openings container (which contains the buttons for each opening).
-        openingsContainer.style.display = "block";
-        const openingData = docSnapshot.data();
-
-        for (const openingName in openingData) {
-          // Loop through the openings
-          if (openingName.endsWith("UsedIndexes")) continue; // Skip the UsedIndexes arrays
-          if (openingName === "FlaggedDrills") {
-            // Create a FlaggedDrills button for the current color (asWhite or asBlack)
-            const colorKey = index === 0 ? "asWhite" : "asBlack";
-            const flaggedDrillsButton = await createOpeningButton(openingName, openingData[colorKey], colorKey);
-            flaggedDrillsButton.classList.add("flagged-drills-button"); // Add a class for styling
-            openingsContainer.appendChild(flaggedDrillsButton); // Add the button to the DOM
-          } else {
-            const colorKey = index === 0 ? "asWhite" : "asBlack";
-            const openingButton = await createOpeningButton(openingName, openingData, colorKey);
-            openingsContainer.appendChild(openingButton); // Add the button to the DOM
-          }
-        }
-      } else {
-        console.log(`No opening data found for ${index === 0 ? "asWhite" : "asBlack"}.`);
-      }
+      const buttons = await processDocSnapshot(docSnapshot, colorKeys[index]);
+      buttons.forEach((button) => openingsContainer.appendChild(button));
     }
+
+
+    flaggedDrillsContainer.style.display = "block";
 
     const flagLastDrillButton = document.createElement("button");
     flagLastDrillButton.textContent = "Flag Last Drill";
     flagLastDrillButton.classList.add("flag-last-drill-button");
-    openingsContainer.appendChild(flagLastDrillButton);
+    flaggedDrillsInteractContainer.appendChild(flagLastDrillButton);
 
     const removeLastFlaggedDrillButton = document.createElement("button");
     removeLastFlaggedDrillButton.textContent = "Remove Last Flagged Drill";
-    removeLastFlaggedDrillButton.classList.add(
-      "remove-last-flagged-drill-button"
-    );
-    openingsContainer.appendChild(removeLastFlaggedDrillButton);
+    removeLastFlaggedDrillButton.classList.add("remove-last-flagged-drill-button");
+    flaggedDrillsInteractContainer.appendChild(removeLastFlaggedDrillButton);
 
-    // Add event listener for "Flag Last Drill" button
     flagLastDrillButton.addEventListener("click", async () => {
       await flagLastDrill(getCurrentUserId(), lastSelectedOpeningLineObj);
-      console.log("Flagged last drill! "+lastSelectedOpeningLineObj);
+      console.log("Flagged last drill! " + lastSelectedOpeningLineObj);
     });
 
-    // Add event listener for "Remove Last Flagged Drill" button
     removeLastFlaggedDrillButton.addEventListener("click", async () => {
       await removeLastFlaggedDrill(getCurrentUserId(), lastSelectedOpeningLineObj);
     });
   } catch (error) {
     console.error("Error fetching opening data:", error);
   }
-};
-
+}; 
 
 
 // This updates the used indexes array for the opening that was clicked on.
@@ -168,3 +195,18 @@ function getCurrentUserId() {
 }
 
 
+export function removeAllButtons() {
+  const containers = [
+    "flagged-drills-container",
+    "openings-for-white-container",
+    "openings-for-black-container",
+    "flagged-drills-interact-container"
+  ];
+
+  containers.forEach((containerId) => {
+    const container = document.getElementById(containerId);
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
+  });
+}

@@ -1,5 +1,5 @@
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js";
-import { getOpeningData } from "./userDataInteractions.js";
+import { getOpeningData,removeAllButtons } from "./userDataInteractions.js";
 const app = window.app;
 const auth = getAuth(app);
  
@@ -47,27 +47,31 @@ signupBtn.addEventListener("click", () => {
 
 // Add event listener for authentication state changes
 onAuthStateChanged(auth, (user) => {
-
   const openingsContainer = document.getElementById("openings-container");
+  const logoutButton = document.getElementById("logout-btn");
 
   if (user) { // User is signed in
-
     console.log("User is signed in:", user);
-    
-    //Hide the login form
+
+    // Hide the login form
     loginForm.style.display = "none";
+    // Show the logout button
+    logoutButton.style.display = "block";
     // Get the user data and make the buttons. 
-    getOpeningData(user.uid,)
+    getOpeningData(user.uid);
 
   } else { // User is signed out or there is no user signed in
-
     console.log("No user is signed in.");
-    //Show the login form
+
+    // Remove all buttons
+    removeAllButtons();
+
+    // Hide the logout button
+    logoutButton.style.display = "none";
+    // Show the login form
     loginForm.style.display = "block";
     // Clear the login form
     loginForm.reset();
-    // Hide the openings container when a user is logged out
-    openingsContainer.style.display = "none";
   }
 });
 
@@ -84,14 +88,3 @@ const logOut = async () => {
 // Add event listener for log out button click
 logoutBtn.addEventListener("click", logOut);
 
-// Add event listener for get user data button click
-// getUserDataBtn.addEventListener("click", () => {
-//   const user = auth.currentUser;
-//   if (user) {
-//     // const userData = getUserData(user.uid);
-//     const userData = getOpeningData(user.uid, "openingID");
-//     console.log("Fetched user data:", userData);
-//   } else {
-//     console.log("No user is signed in.");
-//   }
-// });
