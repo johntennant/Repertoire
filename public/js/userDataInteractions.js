@@ -52,7 +52,7 @@ async function createOpeningButton(openingName, colorKey) {
   
     // Await the Firestore update and then open the URL
     await updateOpeningUsedIndexes(uid, openingName, colorKey, updatedUsedIndexesArray);
-    openURLorPGN(selectedOpeningLine);
+    openURLorPGN(selectedOpeningLine, colorKey);
   });
   
   return button;

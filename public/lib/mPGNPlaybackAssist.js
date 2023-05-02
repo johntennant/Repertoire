@@ -10,6 +10,9 @@ let pgnLines = [];
 let sanArray = pgnToSanArray(PGN_STRING);
 let sanArrayIndex = 0;
 let playerColor = 'white';
+const urlParams = new URLSearchParams(window.location.search);
+const color = urlParams.get('color');
+
 
 
 console.log("mPGNPlaybackAssist.js loaded");
@@ -185,6 +188,12 @@ function resetResetButtonColor() {
   }
 }
 
+// Check color and flip board if necessary.
+function checkColorAndFlipBoard() {
+  if (color === "asBlack") {
+    flipBoardAndMakeFirstMove();
+  }
+}
 
 //Button to make first move when human player is black.
 
@@ -249,6 +258,7 @@ function resetGame() {
   board.setOrientation(ChessUtils.ORIENTATION.white);
   playerColor = 'white';
   updateMoveNumber();
+  window.setTimeout(checkColorAndFlipBoard, 1000);
 }
 
 function updateGameInfo(status) {
