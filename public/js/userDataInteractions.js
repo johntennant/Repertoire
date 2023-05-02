@@ -1,12 +1,8 @@
 import {
   getFirestore,
-  collection,
   doc,
   getDoc,
-  updateDoc,
-  getDocs,
-  writeBatch,
-  setDoc,
+  updateDoc
 } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js";
 import { handleOpeningButtonClick } from './openingButtons.js';
@@ -34,7 +30,6 @@ async function createOpeningButton(openingName, colorKey) {
   button.addEventListener("click", async () => {
     const uid = getCurrentUserId();
     const fetchedDataResult = await handleOpeningButtonClick(uid, openingName, colorKey);
-    // const fetchedDataResult = await handleOpeningButtonClick(uid, openingName);
     const selectedOpeningLines = fetchedDataResult.lines;
     console.log("Selected Opening Lines:", selectedOpeningLines);
     const selectedOpeningUsedIndexes = fetchedDataResult.usedIndexes;
@@ -61,11 +56,11 @@ async function createOpeningButton(openingName, colorKey) {
   return button;
 }
 
-const createFlaggedDrillsButton = async (openingName, colorKey) => {
-  const flaggedDrillsButton = await createOpeningButton(openingName, colorKey);
-  flaggedDrillsButton.classList.add("flagged-drills-button");
-  return flaggedDrillsButton;
-};
+// const createFlaggedDrillsButton = async (openingName, colorKey) => {
+//   const flaggedDrillsButton = await createOpeningButton(openingName, colorKey);
+//   flaggedDrillsButton.classList.add("flagged-drills-button");
+//   return flaggedDrillsButton;
+// };
 
 const createButtonsForOpenings = async (openingData, colorKey) => {
   const buttons = [];
@@ -103,24 +98,47 @@ const processDocSnapshot = async (docSnapshot, colorKey) => {
   return buttons;
 };
 
-export const getOpeningData = async (uid) => {
+export const fetchUserData = async (uid) => {
   try {
     const db = getFirestore();
-    const openingsContainer = document.getElementById("openings-container");
-    
+
     const docRefs = [
       doc(db, "users", uid, "openings", "asWhite"),
       doc(db, "users", uid, "openings", "asBlack"),
-    ]; 
+    ];
 
     const docSnapshots = await Promise.all(docRefs.map((ref) => getDoc(ref)));
     const colorKeys = ["asWhite", "asBlack"];
+    const openingData = {};
 
     for (const [index, docSnapshot] of docSnapshots.entries()) {
-      const buttons = await processDocSnapshot(docSnapshot, colorKeys[index]);
-      buttons.forEach((button) => openingsContainer.appendChild(button));
+      openingData[colorKeys[index]] = docSnapshot.data();
     }
 
+    return openingData;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+  }
+};
+
+
+export const buildUsersOpeningsUI = async (uid) => {
+  try {
+    const db = getFirestore();
+    // const openingsContainer = document.getElementById("openings-container");
+
+    const openingData = await fetchUserData(uid);
+    const colorKeys = ["asWhite", "asBlack"];
+
+    for (const colorKey of colorKeys) {
+      const customDocSnapshot = {
+        exists: () => true,
+        data: () => openingData[colorKey],
+      };
+
+      const buttons = await processDocSnapshot(customDocSnapshot, colorKey);
+      // buttons.forEach((button) => openingsContainer.appendChild(button));
+    }
 
     flaggedDrillsContainer.style.display = "block";
 
@@ -181,7 +199,7 @@ async function updateOpeningUsedIndexes(uid, openingName, color, updatedUsedInde
 
 // Get the current user's ID
 
-function getCurrentUserId() {
+export function getCurrentUserId() {
   const auth = getAuth(); 
   const user = auth.currentUser;
 

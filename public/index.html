@@ -56,12 +56,42 @@
         margin: 1rem 0;
       }
 
+      #manage-openings-container {
+      display: none; /* Initially hidden */
+      }
+
+      /* #manage-openings-container button {
+      /* Add your desired button styles here */
+      /* } */
+
       /* Media queries for responsiveness */
       @media (min-width: 768px) {
         body {
           padding: 2rem;
         }
       }
+
+      /* Basic CSS for the modal */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+
+      .modal-content {
+        background-color: white;
+        margin: 15% auto;
+        padding: 20px;
+        width: 80%;
+        max-width: 500px;
+        text-align: center;
+      }
+
     </style>
   </head>
  
@@ -85,7 +115,10 @@
     <div id="openings-for-white-container" class="container"></div>
     <div id="openings-for-black-container" class="container"></div>
     <div id="flagged-drills-interact-container" class="container"></div>
-    <div id="manage-openings-container" class="container"></div>
+    <div id="manage-openings-container" class="container">
+      <button type="button" id="import-new-opening-btn">Import New Opening</button>
+      <button type="button" id="remove-opening-btn">Remove Opening</button>
+    </div>
 
     <script type="module">
       // Import the functions you need from the SDKs you need
@@ -117,6 +150,18 @@
 
     <script type="module" src="https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js"></script>
     <script type="module" src="js/authentication.js"></script>
+    <script type="module" src="js/manageOpenings.js"></script>
+    
+    <!-- Modal structure for removing an opening -->
+    <div id="remove-opening-modal" class="modal">
+      <div class="modal-content">
+        <h3>Select an opening to remove</h3>
+        <select id="remove-opening-select"></select>
+        <button id="remove-opening-confirm-btn">Remove</button>
+        <button id="remove-opening-cancel-btn">Cancel</button>
+      </div>
+    </div>
+
 
   </body>
 </html>

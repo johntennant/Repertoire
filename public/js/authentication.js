@@ -1,5 +1,5 @@
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js";
-import { getOpeningData,removeAllButtons } from "./userDataInteractions.js";
+import { buildUsersOpeningsUI,removeAllButtons } from "./userDataInteractions.js";
 const app = window.app;
 const auth = getAuth(app);
  
@@ -47,8 +47,9 @@ signupBtn.addEventListener("click", () => {
 
 // Add event listener for authentication state changes
 onAuthStateChanged(auth, (user) => {
-  const openingsContainer = document.getElementById("openings-container");
+
   const logoutButton = document.getElementById("logout-btn");
+  const manageOpeningsContainer = document.getElementById("manage-openings-container");
 
   if (user) { // User is signed in
     console.log("User is signed in:", user);
@@ -58,11 +59,15 @@ onAuthStateChanged(auth, (user) => {
     // Show the logout button
     logoutButton.style.display = "block";
     // Get the user data and make the buttons. 
-    getOpeningData(user.uid);
+    buildUsersOpeningsUI(user.uid);
+    // Show the import and remove buttons
+    manageOpeningsContainer.style.display = "block";
+
 
   } else { // User is signed out or there is no user signed in
     console.log("No user is signed in.");
-
+    // Hide the manage openings container
+    manageOpeningsContainer.style.display = "none";
     // Remove all buttons
     removeAllButtons();
 
