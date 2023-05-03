@@ -19,7 +19,7 @@
     ],
     "headers": [
       {
-        "source": "/bower_components/jquery/dist/jquery.min.js",
+        "source": "lib/bower_components/jquery/dist/jquery.min.js",
         "headers": [
           {
             "key": "Cache-Control",

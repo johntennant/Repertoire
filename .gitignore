@@ -11,6 +11,7 @@ firebase-debug.log
 lib/node_modules/
 lib/bower_components/
 !lib/bower_components/jquery/dist/jquery.min.js
+!public/lib/bower_components/jquery/dist/jquery.min.js
 
 
 # Build artifacts
