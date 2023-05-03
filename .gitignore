@@ -10,6 +10,8 @@ firebase-debug.log
 # Dependency directories
 lib/node_modules/
 lib/bower_components/
+!lib/bower_components/jquery/dist/jquery.min.js
+
 
 # Build artifacts
 dist/
