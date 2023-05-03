@@ -2,7 +2,8 @@ import {
     getFirestore,
     doc,
     updateDoc,
-    deleteField
+    deleteField,
+    writeBatch
   } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js";
 import { getCurrentUserId, fetchUserData, buildUsersOpeningsUI, removeAllButtons } from "./userDataInteractions.js";
 
@@ -230,5 +231,69 @@ document.getElementById("remove-opening-confirm-btn").addEventListener("click", 
     }, () => {
       console.log("Deletion canceled");
     });
+  }
+  
+
+  // fetch default openings from url. 
+  async function fetchTextFile(url) {
+    const response = await fetch(url);
+    const text = await response.text();
+    return text;
+  }
+  
+  async function fetchDefaultOpenings() {
+    const whiteOpeningsUrl = "lib/defaultOpenings/VonPopielGambit.txt";
+    const blackOpeningsUrl = "lib/defaultOpenings/BuschGassGambit.txt";
+  
+    const whiteOpening = await fetchTextFile(whiteOpeningsUrl);
+    const blackOpening = await fetchTextFile(blackOpeningsUrl);
+  
+    return [
+      {
+        openingName: "VonPopielGambit",
+        colorKey: "asWhite",
+        lines: whiteOpening.split("\n"),
+      },
+      {
+        openingName: "BuschGassGambit",
+        colorKey: "asBlack",
+        lines: blackOpening.split("\n"),
+      }
+    ];
+  }
+  
+
+  //Create default openings
+  export async function createDefaultOpeningsForNewUser(uid) {
+    const db = getFirestore();
+    const userRef = doc(db, "users", uid);
+  
+    const defaultOpenings = await fetchDefaultOpenings();
+  
+    const batch = writeBatch(db);
+  
+    // Set up the database structure
+    const whiteOpeningRef = doc(userRef, "openings", "asWhite");
+    const blackOpeningRef = doc(userRef, "openings", "asBlack");
+    batch.set(whiteOpeningRef, {});
+    batch.set(blackOpeningRef, {});
+  
+    // Initialize default openings
+    defaultOpenings.forEach(opening => {
+      const openingRef = opening.colorKey === 'asWhite' ? whiteOpeningRef : blackOpeningRef;
+      batch.update(openingRef, {
+        [opening.openingName]: opening.lines,
+      });
+    });
+  
+    // Initialize FlaggedDrills arrays
+    batch.update(whiteOpeningRef, {
+      FlaggedDrills: [],
+    });
+    batch.update(blackOpeningRef, {
+      FlaggedDrills: [],
+    });
+  
+    await batch.commit();
   }
   

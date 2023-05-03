@@ -139,15 +139,7 @@ export const buildUsersOpeningsUI = async (uid) => {
     flaggedDrillsContainer.style.display = "block";
 
     const flagLastDrillButton = document.getElementById("flag-last-drill-button");
-    // flagLastDrillButton.textContent = "Flag Last Drill";
-    // flagLastDrillButton.classList.add("flag-last-drill-button");
-    flaggedDrillsInteractContainer.appendChild(flagLastDrillButton);
-
-    // const removeLastFlaggedDrillButton = document.createElement("button");
     const removeLastFlaggedDrillButton = document.getElementById("remove-last-flagged-drill-btn");
-    // removeLastFlaggedDrillButton.textContent = "Remove Last Flagged Drill";
-    // removeLastFlaggedDrillButton.classList.add("remove-last-flagged-drill-button");
-    // flaggedDrillsInteractContainer.appendChild(removeLastFlaggedDrillButton);
 
     // After building the UI, check the lastSelectedOpeningLineObj
   const lastSelectedOpeningLineObjString = localStorage.getItem('lastSelectedOpeningLineObj');

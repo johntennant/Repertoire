@@ -1,5 +1,6 @@
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js";
 import { buildUsersOpeningsUI,removeAllButtons } from "./userDataInteractions.js";
+import { createDefaultOpeningsForNewUser } from "./manageOpenings.js";
 const app = window.app;
 const auth = getAuth(app);
  
@@ -15,6 +16,7 @@ const signUp = async (email, password) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     console.log("User signed up:", userCredential.user);
+    await createDefaultOpeningsForNewUser(userCredential.user.uid);
   } catch (error) {
     console.error("Error signing up:", error.message);
   }
