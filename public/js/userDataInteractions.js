@@ -16,14 +16,16 @@ const openingsForBlackContainer = document.getElementById("openings-for-black-co
 const flaggedDrillsContainer = document.getElementById("flagged-drills-container");
 const flaggedDrillsInteractContainer = document.getElementById("flagged-drills-interact-container");
 
-async function createOpeningButton(openingName, colorKey) {
+async function createOpeningButton(openingName, colorKey, openingData) {
   const button = document.createElement("button");
   // Use the opening name as the button text, unless it's "FlaggedDrills"
   // In that case, use "Flagged Drills for White" or "Flagged Drills for Black"
   if (openingName === "FlaggedDrills") {
-    button.textContent = `Flagged Drills for ${colorKey === "asWhite" ? "White" : "Black"}`;
+    button.textContent = `Flagged Drills for ${colorKey === "asWhite" ? "White" : "Black"} ${openingData.length}`;
   } else {
-    button.textContent = openingName;
+    // button.textContent = openingName;
+    button.textContent = `${openingName} ${openingData.length}`;
+
   }
 
   button.classList.add("opening-button");
@@ -58,18 +60,23 @@ async function createOpeningButton(openingName, colorKey) {
   return button;
 }
 
+function findOpeningNameUsedIndexes(openingName, openingData) {
+  for (const openingName in openingData)
+   if (openingName.endsWith("UsedIndexes"))
+  return openingData[openingName + "UsedIndexes"];
+}
+
 const createButtonsForOpenings = async (openingData, colorKey) => {
   const buttons = [];
 
-  for (const openingName in openingData) {
+  for (const openingName in openingData) { 
     if (openingName.endsWith("UsedIndexes")) continue;
-
-    if (openingName === "FlaggedDrills") {
-      const flaggedDrillsButton = await createOpeningButton(openingName, colorKey);
+     if (openingName === "FlaggedDrills") {
+      const flaggedDrillsButton = await createOpeningButton(openingName, colorKey, openingData[openingName]);
       flaggedDrillsButton.classList.add("flagged-drills-button"); // Add a class for styling
       flaggedDrillsContainer.appendChild(flaggedDrillsButton); // Add the button to the DOM
     } else {
-      const openingButton = await createOpeningButton(openingName, colorKey);
+      const openingButton = await createOpeningButton(openingName, colorKey, openingData[openingName]);
       if (colorKey === "asWhite") {
         openingsForWhiteContainer.appendChild(openingButton); // Add the button to the DOM
       } else {
