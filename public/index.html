@@ -166,6 +166,16 @@
     <script type="module" src="js/authentication.js"></script>
     <script type="module" src="js/manageOpenings.js"></script>
     <script type="module" src="js/uiFeedback.js"></script>
+
+    <!-- Force reload of the page when user returns using the back button. -->
+    <script>
+      window.addEventListener('pageshow', (event) => {
+        if (event.persisted) {
+          window.location.reload();
+        }
+      });
+    </script>
+    
     
     <!-- Modal structure for removing an opening -->
     <div id="remove-opening-modal" class="modal">
