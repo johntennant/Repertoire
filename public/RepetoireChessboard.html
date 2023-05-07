@@ -90,7 +90,7 @@
     <div class="text-left mt-1">
       <button id="showCorrectMoveButton" class="btn btn-secondary">Show Correct Move</button>
       <button id="resetButton" class="btn btn-secondary">Reset Board</button>
-      <button id="openInLichess" class="btn btn-secondary">Open in Lichess (Desktop Only)</button>
+      <button id="openInLichess" class="btn btn-secondary">Open in Lichess</button>
 
       <textarea id="pgnText" rows="3" class="form-control mb-3 mt-1"
         placeholder="Enter or paste PGN string here"></textarea>
@@ -131,12 +131,28 @@
 
       document.getElementById('openInLichess').addEventListener('click', function () {
         const pgnText = document.getElementById('pgnText').value.trim();
-        const encodedPgn = encodeURIComponent(pgnText);
         const orientation = window.repertoireBoard.orientation;
-        const colorParam = orientation === 'white' ? 'color=white' : 'color=black';
-        const lichessUrl = `https://lichess.org/analysis/pgn/${encodedPgn}?${colorParam}`;
-        window.open(lichessUrl, '_blank');
+        const playerColor = orientation === 'white' ? 'white' : 'black';
+
+        fetch('https://lichess.org/api/import', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: `pgn=${encodeURIComponent(pgnText)}&color=${playerColor}`
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data && data.url) {
+              const lichessUrl = data.url;
+              window.open(lichessUrl, '_blank');
+            } else {
+              console.error('Error importing game to Lichess:', data);
+            }
+          })
+          .catch(error => console.error('Error importing game to Lichess:', error));
       });
+
 
 
     });
