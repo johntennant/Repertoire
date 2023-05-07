@@ -89,12 +89,14 @@
     
     <div class="text-left mt-1">
       <button id="showCorrectMoveButton" class="btn btn-secondary">Show Correct Move</button>
-      <button id="playAsBlack" class="btn btn-secondary">Play As Black</button>
       <button id="resetButton" class="btn btn-secondary">Reset Board</button>
+      <button id="openInLichess" class="btn btn-secondary">Open in Lichess</button>
+
       <textarea id="pgnText" rows="3" class="form-control mb-3 mt-1"
         placeholder="Enter or paste PGN string here"></textarea>
-      <button id="PgnTextButton" class="btn btn-primary">Load PGN Text</button>
       <!-- hidden buttons start. -->
+      <button id="PgnTextButton" class="btn btn-primary hide-button">Load PGN Text</button>
+      <button id="playAsBlack" class="btn btn-secondary hide-button">Play As Black</button>
       <button id="flipBoardButton" class="btn btn-secondary hide-button">Flip Board</button>
       <button id="makeFirstMoveButton" class="btn btn-secondary hide-button">Make First Move</button>
       <!-- Hidden buttons end. -->
@@ -126,6 +128,17 @@
       setTimeout(function() {
         document.getElementById('PgnTextButton').click();
       }, 500);
+
+      document.getElementById('openInLichess').addEventListener('click', function () {
+        const pgnText = document.getElementById('pgnText').value.trim();
+        const encodedPgn = encodeURIComponent(pgnText);
+        const orientation = window.repertoireBoard.orientation;
+        const colorParam = orientation === 'white' ? 'color=white' : 'color=black';
+        const lichessUrl = `https://lichess.org/analysis/pgn/${encodedPgn}?${colorParam}`;
+        window.open(lichessUrl, '_blank');
+      });
+
+
     });
   </script>
   

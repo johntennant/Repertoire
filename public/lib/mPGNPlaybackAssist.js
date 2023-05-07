@@ -15,6 +15,8 @@ const color = urlParams.get('color');
 
 
 
+
+
 console.log("mPGNPlaybackAssist.js loaded");
 // alert('mPGNPlaybackAssist.js is running');
 updateGameInfo("mPGNPlaybackAssist.js loaded Successfully")
@@ -245,6 +247,8 @@ let board = new Chessboard('board', {
     onMove: pieceMove
   }
 });
+
+window.repertoireBoard = board;
 
 resetGame();
 
