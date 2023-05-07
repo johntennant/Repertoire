@@ -113,6 +113,8 @@
   <script src="lib/bower_components/chessboard-js/js/chessboard.js"></script>
   <!-- <script src="lib/mPGNPlaybackAssist.js?ver=' + Date.now()"></script> -->
   <script src="lib/mPGNPlaybackAssist.js"></script>
+  <script src="js/lichessRelated.js"></script>
+
   
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -129,30 +131,8 @@
         document.getElementById('PgnTextButton').click();
       }, 500);
 
-      document.getElementById('openInLichess').addEventListener('click', function () {
-        const pgnText = document.getElementById('pgnText').value.trim();
-        const orientation = window.repertoireBoard.orientation;
-        const playerColor = orientation === 'white' ? 'white' : 'black';
-
-        fetch('https://lichess.org/api/import', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: `pgn=${encodeURIComponent(pgnText)}&color=${playerColor}`
-        })
-          .then(response => response.json())
-          .then(data => {
-            if (data && data.url) {
-              const lichessUrl = data.url;
-              window.open(lichessUrl, '_blank');
-            } else {
-              console.error('Error importing game to Lichess:', data);
-            }
-          })
-          .catch(error => console.error('Error importing game to Lichess:', error));
-      });
-
+      // Open in lichess button
+      document.getElementById('openInLichess').addEventListener('click', () => openInLichess());
 
 
     });
