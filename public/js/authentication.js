@@ -47,40 +47,43 @@ signupBtn.addEventListener("click", () => {
   signUp(email, password);
 });
 
-// Add event listener for authentication state changes
-onAuthStateChanged(auth, (user) => {
+// // :::: Moved to index.html ::::
+// // Add event listener for authentication state changes 
+// onAuthStateChanged(auth, (user) => {
 
-  const logoutButton = document.getElementById("logout-btn");
-  const manageOpeningsContainer = document.getElementById("manage-openings-container");
+//   const logoutButton = document.getElementById("logout-btn");
+//   const manageOpeningsContainer = document.getElementById("manage-openings-container");
 
-  if (user) { // User is signed in
-    console.log("User is signed in:", user);
+//   if (user) { // User is signed in
+//     console.log("User is signed in:", user);
 
-    // Hide the login form
-    loginForm.style.display = "none";
-    // Show the logout button
-    logoutButton.style.display = "block";
-    // Get the user data and make the buttons. 
-    buildUsersOpeningsUI(user.uid);
-    // Show the import and remove buttons
-    manageOpeningsContainer.style.display = "block";
+//     // Hide the login form
+//     loginContainer.style.display = "none";
+//     // loginForm.style.display = "none";
+//     // Show the logout button
+//     logoutButton.style.display = "block";
+//     // Get the user data and make the buttons. 
+//     buildUsersOpeningsUI(user.uid);
+//     // Show the import and remove buttons
+//     manageOpeningsContainer.style.display = "block";
 
 
-  } else { // User is signed out or there is no user signed in
-    console.log("No user is signed in.");
-    // Hide the manage openings container
-    manageOpeningsContainer.style.display = "none";
-    // Remove all buttons
-    removeAllButtons();
+//   } else { // User is signed out or there is no user signed in
+//     console.log("No user is signed in.");
+//     // Hide the manage openings container
+//     manageOpeningsContainer.style.display = "none";
+//     // Remove all buttons
+//     removeAllButtons();
 
-    // Hide the logout button
-    logoutButton.style.display = "none";
-    // Show the login form
-    loginForm.style.display = "block";
-    // Clear the login form
-    loginForm.reset();
-  }
-});
+//     // Hide the logout button
+//     logoutButton.style.display = "none";
+//     // Show the login form
+//     loginContainer.style.display = "block";
+//     // loginForm.style.display = "block";
+//     // Clear the login form
+//     loginForm.reset();
+//   }
+// });
 
 // Function to handle user log out
 const logOut = async () => {
