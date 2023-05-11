@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-  <title>Repertoirev0.1</title>
+  <title>Repertoire Chessboard v1.0</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <script src="lib/bower_components/jquery/dist/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -42,30 +42,25 @@
       display: none;
     }
     
-    /* how do I change the color of the board? This isn't working. 
+    .feedback-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: stretch;
+      width: 100%;
+    }
 
-    .chessboard .chess_square_light {
-      background-color: #72654f; 
-      }
-    .chessboard .chess_square_dark {
-      background-color: #5a4e3e; 
-      }
-*/
-.feedback-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: stretch;
-  width: 100%;
-}
+    .mistake-count {
+      text-align: right;
+    }
 
-.mistake-count {
-  text-align: right;
-}
+    .move-number {
+      font-size: 16px;
+      text-align: right;
+    }
 
-.move-number {
-  font-size: 16px;
-  text-align: right;
-}
+    body {
+    touch-action: manipulation; /* Disables double-tap zoom */
+    }
 
   </style>
 <!-- suppress favicon search -->
