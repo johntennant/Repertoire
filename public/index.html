@@ -27,6 +27,12 @@
         gap: 1rem;
       }
 
+      .small-text {
+        font-size: 0.8rem;
+        color: #aaa;
+      }
+
+
       input, button {
         padding: 0.5rem;
         font-size: 1rem;
@@ -63,20 +69,41 @@
       .opening-button {
         margin: 3px;
       }
+      
+      #toggle-readme-btn {
+        margin-top: 8px;
+      }
+
+      #readme-content {
+        display: none;
+        color: #fff;
+        width: 90%;
+        overflow-wrap: break-word;
+        white-space: pre-wrap;
+        margin-top: 8px;
+      }
+
 
       #login-container {
         display: none;
       }
+
+
       /* Style for smaller screens (e.g., phones) */
       @media screen and (max-width: 768px) {
         .opening-button {
         width: 80%; 
         } 
+        #flag-last-drill-button {
+        width: 80%; 
+        } 
+        #remove-last-flagged-drill-btn {
+        width: 80%; 
+        } 
+        #toggle-readme-btn {
+        width: 80%; 
+        }
       }
-
-      /* #manage-openings-container button {
-      /* Add your desired button styles here */
-      /* } */
 
       /* Media queries for responsiveness */
       @media (min-width: 768px) {
@@ -131,20 +158,30 @@
     <!-- Flagged Drills interface... etc. -->
 
     <div id="flagged-drills-container" class="container"></div>
-    <div id="openings-for-white-container" class="container"></div>
-    <div id="openings-for-black-container" class="container"></div>
     <div id="flagged-drills-interact-container" class="container">
       <button type="button" id="flag-last-drill-button">Flag Last Drill</button>
       <button id="remove-last-flagged-drill-btn" class="hidden">Remove Last Flagged Drill</button>
-
-
     </div>
+    
+    <div id="openings-for-white-container" class="container">
+      <p class="small-text">Playing as White</p>
+    </div>
+    
+    <div id="openings-for-black-container" class="container">
+      <p class="small-text">Playing as Black</p>
+    </div>
+    
+
     <div id="manage-openings-container" class="container">
       <button type="button" id="import-new-opening-btn">Import New Opening</button>
       <button type="button" id="remove-opening-btn">Remove Opening</button>
     </div>
 
     <button type="button" id="logout-btn">Log Out</button>
+    <button type="button" id="toggle-readme-btn">Show Read Me</button>
+    <pre id="readme-content" style="display: none;"></pre>
+
+
     <script type="module">
       // Import the functions you need from the SDKs you need
       import { initializeApp } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js";
