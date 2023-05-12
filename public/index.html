@@ -8,7 +8,7 @@
     <link rel="icon" href="data:,"> 
     
     <style>
-      /* CSS Reset */
+      
       * {
         margin: 0;
         padding: 0;
@@ -17,7 +17,7 @@
 
       body {
         font-family: Arial, sans-serif;
-        background-color: #f8f8f8;
+        background-color: #333;
         padding: 1rem;
       }
 
@@ -35,7 +35,7 @@
 
       button {
         cursor: pointer;
-        background-color: #007bff;
+        background-color: #2f4443;
         color: #fff;
         border: none;
       }
@@ -67,7 +67,12 @@
       #login-container {
         display: none;
       }
-
+      /* Style for smaller screens (e.g., phones) */
+      @media screen and (max-width: 768px) {
+        .opening-button {
+        width: 100%; 
+        } 
+      }
 
       /* #manage-openings-container button {
       /* Add your desired button styles here */
