@@ -32,7 +32,7 @@ export function showTemporaryMessage(message, duration = 6000) {
   }
 
   // Fetch the readme text
-  const response = await fetch('/public/ReadMe.txt');
+  const response = await fetch('./ReadMe.txt');
   const text = await response.text();
 
   // Display the readme text
