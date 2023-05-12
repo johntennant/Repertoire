@@ -263,7 +263,7 @@ document.getElementById("remove-opening-confirm-btn").addEventListener("click", 
   }
   
 
-  //Create default openings
+  //:::::::::::::Create default openings::::::::::::::::::::::::
   export async function createDefaultOpeningsForNewUser(uid) {
     const db = getFirestore();
     const userRef = doc(db, "users", uid);
