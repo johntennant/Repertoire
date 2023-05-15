@@ -114,7 +114,10 @@
       const pgnParam = urlParams.get('pgn');
       if (pgnParam) {
         const pgnTextField = document.getElementById('pgnText');
-        pgnTextField.value = decodeURIComponent(pgnParam);
+        let decodedPgnLine = decodeURIComponent(pgnParam);
+        decodedPgnLine = decodedPgnLine.replace(/%25/g, '%');
+        pgnTextField.value = decodedPgnLine;
+
       }
       
       // Automatically click the "Load PGN Text" button
