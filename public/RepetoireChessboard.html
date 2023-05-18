@@ -109,28 +109,26 @@
 
   
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const pgnParam = urlParams.get('pgn');
-      if (pgnParam) {
-        const pgnTextField = document.getElementById('pgnText');
-        let decodedPgnLine = decodeURIComponent(pgnParam);
-        decodedPgnLine = decodedPgnLine.replace(/%25/g, '%');
-        pgnTextField.value = decodedPgnLine;
+      document.addEventListener('DOMContentLoaded', function () {
+        const pgnParam = localStorage.getItem("pgn");
+        if (pgnParam) {
+          const pgnTextField = document.getElementById('pgnText');
+          pgnTextField.value = pgnParam;
 
-      }
-      
-      // Automatically click the "Load PGN Text" button
-      // with a delay to allow the page to load
-      setTimeout(function() {
-        document.getElementById('PgnTextButton').click();
-      }, 500);
+          // Clear the PGN string from localStorage after use
+          localStorage.removeItem("pgn");
+        }
 
-      // Open in lichess button
-      document.getElementById('openInLichess').addEventListener('click', () => openInLichess());
+        // Automatically click the "Load PGN Text" button
+        // with a delay to allow the page to load
+        setTimeout(function () {
+          document.getElementById('PgnTextButton').click();
+        }, 500);
 
+        // Open in lichess button
+        document.getElementById('openInLichess').addEventListener('click', () => openInLichess());
+      });
 
-    });
   </script>
   
 </body>
