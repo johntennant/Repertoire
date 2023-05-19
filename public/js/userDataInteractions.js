@@ -5,7 +5,7 @@ import {
   updateDoc
 } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js";
-import { handleOpeningButtonClick } from './openingButtons.js';
+import { handleOpeningButtonClick, fetchOpeningData } from './openingButtons.js';
 import { shufflePickString } from './shuffleFromArrayAndStoreHistory.js'; 
 import { openURLorPGN } from './handleUrlDrillOrPgnLine.js';
 import { flagLastDrill, removeLastFlaggedDrill } from "./flaggedDrillsAddRemove.js";
@@ -60,11 +60,43 @@ async function createOpeningButton(openingName, colorKey, openingData) {
   return button;
 }
 
-function findOpeningNameUsedIndexes(openingName, openingData) {
-  for (const openingName in openingData)
-   if (openingName.endsWith("UsedIndexes"))
-  return openingData[openingName + "UsedIndexes"];
+
+export async function refreshFlaggedDrillsButtons() {
+  // We first obtain a reference to the HTML container which holds the flagged drills buttons.
+  const flaggedDrillsContainer = document.getElementById('flagged-drills-container');
+
+  // Next, we clear all existing child elements (buttons in this case) from this container.
+  // This is done by repeatedly removing the first child until there are no children left.
+  while (flaggedDrillsContainer.firstChild) {
+    flaggedDrillsContainer.removeChild(flaggedDrillsContainer.firstChild);
+  }
+
+  // We define an array of the color keys, each representing a distinct color.
+  const colorKeys = ["asWhite", "asBlack"];
+
+  // We also define the opening names for which we want to refresh buttons.
+  const openingNames = ['FlaggedDrills'];
+
+  // We obtain the user ID from the 'getCurrentUserId' function.
+  // This function must be defined elsewhere in your code.
+  const uid = getCurrentUserId();
+
+  // We loop through both color keys and opening names and fetch data for each combination.
+  for (const colorKey of colorKeys) {
+    for (const openingName of openingNames) {
+      // The function 'fetchOpeningData' is called with the user ID, opening name, and color key as parameters.
+      // The data fetched from this function includes the opening lines and used indexes.
+      const fetchedDataResult = await fetchOpeningData(uid, openingName, colorKey);
+
+      // Now we recreate the buttons for each opening using the 'createOpeningButton' function.
+      // The newly created button is then appended to the container.
+      const newButton = await createOpeningButton(openingName, colorKey, fetchedDataResult.lines);
+      flaggedDrillsContainer.appendChild(newButton);
+    }
+  }
 }
+
+
 
 const createButtonsForOpenings = async (openingData, colorKey) => {
   const buttons = [];

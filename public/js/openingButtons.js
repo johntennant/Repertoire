@@ -5,7 +5,7 @@ import { getFirestore, doc, getDoc, collection } from "https://www.gstatic.com/f
 // Also retrieve the array of used indexes from the opening data.
 // Return an object containing the opening lines, used indexes, and color key.
 
-async function fetchOpeningData(uid, openingName, colorKey) {
+export async function fetchOpeningData(uid, openingName, colorKey) {
   try {
     const db = getFirestore();
     const openingsRef = collection(db, "users", uid, "openings");

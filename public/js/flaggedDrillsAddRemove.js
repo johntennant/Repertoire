@@ -1,5 +1,6 @@
 import { getFirestore, doc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js";
 import { showTemporaryMessage } from "./uiFeedback.js";
+import { refreshFlaggedDrillsButtons } from "./userDataInteractions.js";
 
 export const flagLastDrill = async (uid) => {
   // Retrieve the data from local storage
@@ -23,6 +24,7 @@ export const flagLastDrill = async (uid) => {
   } else {
     console.error("No lastSelectedOpeningLineObj found in local storage.");
   }
+  refreshFlaggedDrillsButtons();
 };
 
 
@@ -70,4 +72,5 @@ export const removeLastFlaggedDrill = async (uid) => {
   } else {
     console.error("No lastSelectedOpeningLineObj found in local storage.");
   }
+  refreshFlaggedDrillsButtons();
 };
