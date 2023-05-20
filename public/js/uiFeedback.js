@@ -20,27 +20,28 @@ export function showTemporaryMessage(message, duration = 6000) {
   }
   
 // This function is called when the user clicks the "Show ReadMe" button
-  export async function toggleReadMe() {
-  const readmeButton = document.getElementById('toggle-readme-btn');
-  const readmeContent = document.getElementById('readme-content');
-  
+export async function toggleReadMe() {
+  const readmeButton = document.getElementById("toggle-readme-btn");
+  const readmeContent = document.getElementById("readme-content");
+
   // If the readme is currently displayed, hide it
-  if (readmeContent.style.display !== 'none') {
-    readmeContent.style.display = 'none';
-    readmeButton.textContent = 'Show Read Me';
+  if (readmeContent.style.display !== "none") {
+    readmeContent.style.display = "none";
+    readmeButton.textContent = "Show Read Me";
     return;
   }
 
   // Fetch the readme text
-  const response = await fetch('./ReadMe.txt');
+  const response = await fetch('./ReadMe.html');
   const text = await response.text();
 
   // Display the readme text
-  readmeContent.textContent = text;
+  readmeContent.innerHTML = text;
   readmeContent.style.display = 'block';
 
   // Update the button text
   readmeButton.textContent = 'Hide Read Me';
 }
+
 
 document.getElementById('toggle-readme-btn').addEventListener('click', toggleReadMe);
