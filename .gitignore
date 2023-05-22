@@ -26,3 +26,7 @@ build/
 *.swp
 *.swo
 *.bak
+
+# not needed anymore
+
+openingsLib
