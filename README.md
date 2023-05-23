@@ -37,11 +37,11 @@ Before you can import a new opening, you need to prepare a text file that contai
 [...etc]
 ```
 
-Each line break is parsed as a different variation of the opening. Project-Repertoire doesn't yet support directly importing PGN files, but the conversion process is support via a simple drag and drop batch file which uses a free, open-source commandline program called pgn-extract (https://github.com/MichaelB7/pgn-extract) in combination with a python script which completes the conversion process. 
+Each line break is parsed as a different variation of the opening. Project-Repertoire doesn't yet support directly importing PGN files, but a conversion process is offered via a simple drag and drop batch file which uses a free, open-source commandline program called pgn-extract (https://github.com/MichaelB7/pgn-extract) in combination with a python script which completes the conversion process. A huge caveat here is the conversion process is imperfect. Some 'massaging' of the outputted result is sometimes needed. Because there are so many unexpected things that can be found in a PGN file, it's difficult to anticipate everything with a single script. 
 
 You can download all three files here: https://github.com/johntennant/Repertoire/blob/master/Repertoire_PGN_Convert.zip
 
-To use the batch file, simply drag and drop a PGN file onto the batch file. A new text file will be created in the same directory as the PGN file. The text file will have the same name as the PGN file, but with a .txt extension. This new text file can be imported using the Import Opening button. 
+To use the batch file, you'll Python installed. Next, make sure the PGN filename is exactly what you want the opening to be called in your Repertoire database. (You'll understand why in a bit.) Then simply drag and drop a PGN file onto the batch file: "Drag PGN File Here.bat". A new text file will be created in the same directory as the PGN file. The text file will have the same name as the PGN file, but with a .txt extension. This new text file can be imported using the Import Opening button. 
 
 ## Importing the Opening
 
