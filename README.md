@@ -13,6 +13,8 @@ After practicing a variation, there is an option to "Flag Last Drill". This will
 
 The "Flag Last Drill" and "Remove Last Flagged Drill" buttons are context-sensitive. I.E. they are hidden/visible at the right times. 
 
+At the botton of the chessboard page, there is also a "Flag This Drill"/"Unflag This Drill" button (depending on whether the last selected drill was a flagged drill or not). This button does exactly the same thing as "Flag Last Drill" and "Remove Last Flagged Drill" except it's from the chessboard page instead. If one of these buttons are used, they will be hidden on the index.html page to prevent redundantly adding/removing drills to the Flagged Drill list. 
+
 ## User Account: 
 
 After creating a user-account, you'll have two openings by default: The VonPopiel Gambit [26 variations] and the Busch-Gass Gambit (accepted/denied combined) [95 variations]. William Graif FM is the author of the original Lichess studies used to create these openings in this app. He has (not quite yet) graciously given permission for them to be used in this context. You can see the original studies here: 
