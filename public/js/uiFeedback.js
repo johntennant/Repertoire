@@ -44,4 +44,11 @@ export async function toggleReadMe() {
 }
 
 
-document.getElementById('toggle-readme-btn').addEventListener('click', toggleReadMe);
+// document.getElementById('toggle-readme-btn').addEventListener('click', toggleReadMe);
+
+document.addEventListener('DOMContentLoaded', function () {
+  const readmeBtn = document.getElementById('toggle-readme-btn');
+  if(readmeBtn){
+    readmeBtn.addEventListener('click', toggleReadMe);
+  }
+});

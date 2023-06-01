@@ -187,12 +187,8 @@
       import { initializeApp } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js";
       import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-analytics.js";
       import { getAuth } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js";
-      // TODO: Add SDKs for Firebase products that you want to use
-      // https://firebase.google.com/docs/web/setup#available-libraries
-
-
+    
       // Your web app's Firebase configuration
-      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
       const firebaseConfig = {
         apiKey: "AIzaSyD1cxRuxfABPCNdA072NqkBx_Se7cdy19Q",
         authDomain: "project-repertoire.firebaseapp.com",
@@ -202,57 +198,81 @@
         appId: "1:1077824903060:web:394b50f971a3edd575a181",
         measurementId: "G-7B2Z15KFWL"
       };
-
+    
       // Initialize Firebase
       const app = initializeApp(firebaseConfig);
       const analytics = getAnalytics(app);
       const auth = getAuth(app);
       
       import { getCurrentUserId, fetchUserData, buildUsersOpeningsUI, removeAllButtons } from "./js/userDataInteractions.js";
+      import { flagLastDrill, removeLastFlaggedDrill } from "./js/flaggedDrillsAddRemove.js";
+    
       // Add event listener for authentication state changes
-        auth.onAuthStateChanged((user) => {
+      auth.onAuthStateChanged(async (user) => {
         const loginContainer = document.getElementById("login-container");
         const logoutButton = document.getElementById("logout-btn");
         const manageOpeningsContainer = document.getElementById("manage-openings-container");
+    
+        const flagLastDrillButton = document.getElementById("flag-last-drill-button");
+        const removeLastFlaggedDrillButton = document.getElementById("remove-last-flagged-drill-btn");
 
         if (user) { // User is signed in
           console.log("User is signed in:", user);
-
+    
           // Hide the login form
           loginContainer.style.display = "none";
-          // loginForm.style.display = "none";
           // Show the logout button
           logoutButton.style.display = "block";
           // Get the user data and make the buttons. 
           buildUsersOpeningsUI(user.uid);
           // Show the import and remove buttons
           manageOpeningsContainer.style.display = "block";
+    
+          // Perform action if it exists in localstorage
+          const action = localStorage.getItem('action');
+          if (action) {
+            if (action === 'flagLastDrill') {
+              await flagLastDrill(user.uid);
+              console.log("Flagged last drill!");
 
+              // Hide the buttons if action was used
+              flagLastDrillButton.style.display = 'none';
+              removeLastFlaggedDrillButton.style.display = 'none';
+            } else if (action === 'removeLastFlaggedDrill') {
+              await removeLastFlaggedDrill(user.uid);
 
+              // Hide the buttons if action was used
+              flagLastDrillButton.style.display = 'none';
+              removeLastFlaggedDrillButton.style.display = 'none';
+            }
+            // Always clear the action after running it
+            localStorage.removeItem('action');
+          }
+    
         } else { // User is signed out or there is no user signed in
           console.log("No user is signed in.");
           // Hide the manage openings container
           manageOpeningsContainer.style.display = "none";
           // Remove all buttons
           removeAllButtons();
-
+    
           // Hide the logout button
           logoutButton.style.display = "none";
           // Show the login form
           loginContainer.style.display = "block";
-          // loginForm.style.display = "block";
           // Clear the login form
           loginForm.reset();
         }
-        });
+      });
+    
       window.app = app;
     </script>
-
+    
     <script type="module" src="https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js"></script>
     <script type="module" src="js/authentication.js"></script>
     <script type="module" src="js/manageOpenings.js"></script>
     <script type="module" src="js/uiFeedback.js"></script>
-
+    
     <!-- Force reload of the page when user returns using the back button. -->
     <script>
       window.addEventListener('pageshow', (event) => {
@@ -261,6 +281,7 @@
         }
       });
     </script>
+    
     
     
     <!-- Modal structure for removing an opening -->
