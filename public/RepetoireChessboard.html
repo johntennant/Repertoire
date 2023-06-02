@@ -9,8 +9,9 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="lib/bower_components/chessboard-js/css/chessboard.css">
   <meta name="viewport" content="width = device-width, initial-scale = 1.0, maximum-scale = 1.0, user-scalable = no">
+  <link rel="stylesheet" href="style.css">
 
-  <style>
+  <!-- <style>
 
     body {
       background-color: #333; /* dark grey */
@@ -60,7 +61,7 @@
       text-align: right;
     }
 
-  </style>
+  </style> -->
 <!-- suppress favicon search -->
 <link rel="icon" href="data:,">
   
@@ -88,6 +89,13 @@
       <textarea id="pgnText" rows="3" class="form-control mb-3 mt-1"
         placeholder="Enter or paste PGN string here"></textarea>
         <button id="dynamicButton" class="btn btn-secondary hide-button">Button Text</button>
+        <button id="returnToIndexButton" class="btn btn-secondary">Return to Main Page</button>
+        <!-- Create a bunch of empty space at the botton of the page to make it possible to scroll the last two buttons into the middle of the phone screen. -->
+        <div class="text-left mt-4">
+          <a href="https://github.com/johntennant/Repertoire" target="_blank">Project Repertoire Github Page</a>
+        </div>
+        <div style="height: 100vh;"></div>
+
 
       <!-- hidden buttons start. -->
       <button id="PgnTextButton" class="btn btn-primary hide-button">Load PGN Text</button>
@@ -99,9 +107,7 @@
     
     </div>
     
-    <div class="text-left mt-4">
-      <a href="https://github.com/johntennant/Repertoire" target="_blank">Project Repertoire Github Page</a>
-    </div>
+
   </div>
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.2/chess.min.js"></script>
@@ -130,6 +136,14 @@
 
         // Open in lichess button
         document.getElementById('openInLichess').addEventListener('click', () => openInLichess());
+
+        // Return to index button
+        document.getElementById('returnToIndexButton').addEventListener('click', () => {
+
+          // Redirect to index.html
+          window.location.href = "index.html";
+        });
+
       });
 
   </script>

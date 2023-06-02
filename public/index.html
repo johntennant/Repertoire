@@ -6,139 +6,8 @@
     <title>Repertoire Chess Utility</title>
     <!-- suppress favicon search -->
     <link rel="icon" href="data:,"> 
-    
-    <style>
-      
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #333;
-        padding: 1rem;
-      }
-
-      form {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-      }
-
-      .small-text {
-        font-size: 0.8rem;
-        color: #aaa;
-      }
-
-
-      input, button {
-        padding: 0.5rem;
-        font-size: 1rem;
-        border-radius: 5px;
-      }
-
-      button {
-        cursor: pointer;
-        background-color: #2f4443;
-        color: #fff;
-        border: none;
-      }
-
-      button:hover {
-        background-color: #2f4443;
-      }
-
-      label {
-        margin-bottom: 0.5rem;
-      }
-
-      #openings-container, #flagged-drills-container {
-        display: none;
-      }
-
-      .container {
-        margin: 1rem 0;
-      }
-
-      #manage-openings-container {
-      display: none; /* Initially hidden */
-      }
-      
-      .opening-button {
-        margin: 3px;
-      }
-      
-      #toggle-readme-btn {
-        margin-top: 8px;
-      }
-
-      #readme-content {
-        display: none;
-        color: #fff;
-        width: 90%;
-        overflow-wrap: break-word;
-        white-space: pre-wrap;
-        margin-top: 8px;
-      }
-
-
-      #login-container {
-        display: none;
-      }
-
-
-      /* Style for smaller screens (e.g., phones) */
-      @media screen and (max-width: 768px) {
-        .opening-button {
-        width: 80%; 
-        } 
-        #flag-last-drill-button {
-        width: 80%; 
-        } 
-        #remove-last-flagged-drill-btn {
-        width: 80%; 
-        } 
-        #toggle-readme-btn {
-        width: 80%; 
-        }
-      }
-
-      /* Media queries for responsiveness */
-      @media (min-width: 768px) {
-        body {
-          padding: 2rem;
-        }
-      }
-
-      /* Basic CSS for the modal */
-      .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-      }
-
-      .modal-content {
-        background-color: white;
-        margin: 15% auto;
-        padding: 20px;
-        width: 80%;
-        max-width: 500px;
-        text-align: center;
-      }
-
-      .hidden {
-        display: none;
-      }
-
-
-    </style>
+    <link rel="stylesheet" href="style.css">
+ 
   </head>
  
   <body>
@@ -180,7 +49,11 @@
     <button type="button" id="logout-btn">Log Out</button>
     <button type="button" id="toggle-readme-btn">Show Read Me</button>
     <pre id="readme-content" style="display: none;"></pre>
-
+    <!-- Insert a couple of lines of empty space here. -->
+    <div style="height: 1rem;"></div>
+    <div class="text2-left mt-4">
+      <a href="https://github.com/johntennant/Repertoire" target="_blank">Project Repertoire Github Page</a>
+    </div>
 
     <script type="module">
       // Import the functions you need from the SDKs you need
