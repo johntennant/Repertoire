@@ -77,7 +77,7 @@
       const analytics = getAnalytics(app);
       const auth = getAuth(app);
       
-      import { getCurrentUserId, fetchUserData, buildUsersOpeningsUI, removeAllButtons } from "./js/userDataInteractions.js";
+      import { getCurrentUserId, fetchUserData, buildUsersOpeningsUI, removeAllButtons, loadNewFlaggedDrill } from "./js/userDataInteractions.js";
       import { flagLastDrill, removeLastFlaggedDrill } from "./js/flaggedDrillsAddRemove.js";
     
       // Add event listener for authentication state changes
@@ -104,7 +104,15 @@
           // Perform action if it exists in localstorage
           const action = localStorage.getItem('action');
           if (action) {
-            if (action === 'flagLastDrill') {
+            if (action === 'loadRandomFlaggedDrill') {
+              // remove the action from local storage
+              localStorage.removeItem('action');
+              // Load a new flagged drill
+              const colorKey = Math.random() < 0.5 ? 'asWhite' : 'asBlack';
+              // a delay to allow the UI to update before loading the new drill
+              await new Promise(resolve => setTimeout(resolve, 1000));
+              await loadNewFlaggedDrill(colorKey);
+            } else if (action === 'flagLastDrill') {
               await flagLastDrill(user.uid);
               console.log("Flagged last drill!");
 

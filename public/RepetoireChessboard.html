@@ -38,12 +38,15 @@
 
       <textarea id="pgnText" rows="3" class="form-control mb-3 mt-1"
         placeholder="Enter or paste PGN string here"></textarea>
-        <button id="dynamicButton" class="btn btn-secondary hide-button">Button Text</button>
+        <button id="dynamicFlaggedDrillsButton" class="btn btn-secondary hide-button">Button Text</button>
+        <button id="loadNewFlaggedDrillButton" class="btn btn-secondary">Practice a New Flagged Drill</button>
+
         <button id="returnToIndexButton" class="btn btn-secondary">Return to Main Page</button>
-        <!-- Create a bunch of empty space at the botton of the page to make it possible to scroll the last two buttons into the middle of the phone screen. -->
+        
         <div class="text-left mt-4">
           <a href="https://github.com/johntennant/Repertoire" target="_blank">Project Repertoire Github Page</a>
         </div>
+        <!-- a bunch of empty space at the botton of the page to make it possible to scroll the last two buttons into the middle of the phone screen. -->
         <div style="height: 100vh;"></div>
 
 
@@ -65,7 +68,7 @@
   <script src="lib/mPGNPlaybackAssist.js"></script>
   <script src="js/lichessRelated.js"></script>
 
-  
+
   <script>
       document.addEventListener('DOMContentLoaded', function () {
         const pgnParam = localStorage.getItem("pgn");
@@ -86,6 +89,13 @@
         // Open in lichess button
         document.getElementById('openInLichess').addEventListener('click', () => openInLichess());
 
+        // Practice New Flagged Drill 
+        document.getElementById('loadNewFlaggedDrillButton').addEventListener('click', () => {
+          localStorage.setItem('action', 'loadRandomFlaggedDrill'); 
+          // Redirect to index.html
+          window.location.href = "index.html";
+        });
+
         // Return to index button
         document.getElementById('returnToIndexButton').addEventListener('click', () => {
 
@@ -104,7 +114,7 @@
     const lastSelectedOpeningLineObjString = localStorage.getItem(
       "lastSelectedOpeningLineObj"
     );
-    const dynamicButton = document.getElementById('dynamicButton');
+    const dynamicFlaggedDrillsButton = document.getElementById('dynamicFlaggedDrillsButton');
 
     if (lastSelectedOpeningLineObjString) {
       const lastSelectedOpeningLineObj = JSON.parse(
@@ -112,17 +122,16 @@
       );
 
       if (lastSelectedOpeningLineObj.openingName === "FlaggedDrills") {
-        dynamicButton.textContent = "Unflag This Drill";
-        dynamicButton.addEventListener("click", () => {
+        dynamicFlaggedDrillsButton.textContent = "Unflag This Drill";
+        dynamicFlaggedDrillsButton.addEventListener("click", () => {
           // Store command in local storage
           localStorage.setItem('action', 'removeLastFlaggedDrill');
-
           // Redirect to index.html
           window.location.href = "index.html";
         });
       } else {
-        dynamicButton.textContent = "Flag This Drill";
-        dynamicButton.addEventListener("click", () => {
+        dynamicFlaggedDrillsButton.textContent = "Flag This Drill";
+        dynamicFlaggedDrillsButton.addEventListener("click", () => {
           // Store command in local storage
           localStorage.setItem('action', 'flagLastDrill');
 
@@ -131,7 +140,7 @@
         });
       }
 
-      dynamicButton.classList.remove('hide-button');  // Make the button visible
+      dynamicFlaggedDrillsButton.classList.remove('hide-button');  // Make the button visible
     }
   });
 </script>

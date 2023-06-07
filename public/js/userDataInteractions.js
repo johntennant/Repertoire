@@ -18,6 +18,9 @@ const flaggedDrillsInteractContainer = document.getElementById("flagged-drills-i
 
 async function createOpeningButton(openingName, colorKey, openingData) {
   const button = document.createElement("button");
+  // Add the color key as a class to the button to be used for loadNewFlaggedDrill(colorKey)
+  button.classList.add("opening-button", colorKey);
+  
   // Use the opening name as the button text, unless it's "FlaggedDrills"
   // In that case, use "Flagged Drills for White" or "Flagged Drills for Black"
   if (openingName === "FlaggedDrills") {
@@ -269,4 +272,15 @@ export function removeAllButtons() {
       container.removeChild(container.firstChild);
     }
   });
+}
+
+export function loadNewFlaggedDrill(colorKey) {
+  const flaggedDrillsContainer = document.getElementById('flagged-drills-container');
+  const button = flaggedDrillsContainer.querySelector(`button.opening-button.${colorKey}`);
+
+  if (button) {
+    button.click();
+  } else {
+    console.error(`No button found for colorKey ${colorKey}`);
+  }
 }
