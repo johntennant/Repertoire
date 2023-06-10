@@ -1,5 +1,18 @@
 {
   "projects": {
     "default": "project-repertoire"
-  }
+  },
+  "targets": {
+    "project-repertoire": {
+      "hosting": {
+        "live": [
+          "project-repertoire"
+        ],
+        "staging": [
+          "project-repertoire-staging"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

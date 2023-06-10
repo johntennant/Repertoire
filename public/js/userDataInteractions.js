@@ -16,51 +16,96 @@ const openingsForBlackContainer = document.getElementById("openings-for-black-co
 const flaggedDrillsContainer = document.getElementById("flagged-drills-container");
 const flaggedDrillsInteractContainer = document.getElementById("flagged-drills-interact-container");
 
+export function testFunction() {
+  const flaggedDrillData_asWhite = JSON.parse(
+    localStorage.getItem("flaggedDrillData_asWhite")
+  );
+  const flaggedDrillData_asBlack = JSON.parse(
+    localStorage.getItem("flaggedDrillData_asBlack")
+  );
+
+  // console.log(flaggedDrillData_asBlack);
+  // console.log(flaggedDrillData_asWhite);
+  const selectedFlaggedDrillsColor = Math.random() < 0.5 ? flaggedDrillData_asWhite : flaggedDrillData_asBlack;
+  const testData = selectedFlaggedDrillsColor
+
+  handleButtonClick(selectedFlaggedDrillsColor.openingName, selectedFlaggedDrillsColor.colorKey);
+
+  console.log(testData);
+}
+
+window.testFunction = testFunction;
+
+export async function practiceNewDrill() {
+  const flaggedDrillData_asWhite = JSON.parse(
+    localStorage.getItem("flaggedDrillData_asWhite")
+  );
+  const flaggedDrillData_asBlack = JSON.parse(
+    localStorage.getItem("flaggedDrillData_asBlack")
+  );
+  const selectedFlaggedDrillsColor = Math.random() < 0.5 ? flaggedDrillData_asWhite : flaggedDrillData_asBlack;
+
+  handleButtonClick(selectedFlaggedDrillsColor.openingName, selectedFlaggedDrillsColor.colorKey);
+  console.log(selectedFlaggedDrillsColor);
+}
+
 async function createOpeningButton(openingName, colorKey, openingData) {
   const button = document.createElement("button");
-  // Add the color key as a class to the button to be used for loadNewFlaggedDrill(colorKey)
   button.classList.add("opening-button", colorKey);
-  
-  // Use the opening name as the button text, unless it's "FlaggedDrills"
-  // In that case, use "Flagged Drills for White" or "Flagged Drills for Black"
+
   if (openingName === "FlaggedDrills") {
     button.textContent = `Flagged Drills for ${colorKey === "asWhite" ? "White" : "Black"} ${openingData.length}`;
   } else {
-    // button.textContent = openingName;
     button.textContent = `${openingName} ${openingData.length}`;
-
+    console.log("From userDataInteractions.js, openingName:", openingName);
+    console.log("From userDataInteractions.js, openingData:", [openingName + 'UsedIndexes']);
   }
 
   button.classList.add("opening-button");
-  button.addEventListener("click", async () => {
-    const uid = getCurrentUserId();
-    const fetchedDataResult = await handleOpeningButtonClick(uid, openingName, colorKey);
-    const selectedOpeningLines = fetchedDataResult.lines;
-    console.log("Selected Opening Lines:", selectedOpeningLines);
-    const selectedOpeningUsedIndexes = fetchedDataResult.usedIndexes;
-  
-    const shuffleResult = shufflePickString(selectedOpeningUsedIndexes, selectedOpeningLines);
-    const selectedOpeningLine = shuffleResult.pickedString;
-    console.log("From userDataInteractions.js, Selected Opening Line:", selectedOpeningLine);
-    
-    const updatedUsedIndexesArray = shuffleResult.updatedUsedIndexes;
-  
-    console.log("From userDataInteractions.js, Color Key:", colorKey);
-  
-    // Update the global variable with the selected opening line
-    lastSelectedOpeningLineObj = {
-      pgn: selectedOpeningLine,
-      openingName,
-      colorKey,
+  button.addEventListener("click", () => handleButtonClick(openingName, colorKey));
+
+  // Save to localStorage if it's a flagged drill button
+  if (openingName === "FlaggedDrills") {
+    // Note: We can't store DOM elements (like buttons) directly in localStorage as it only supports strings.
+    // But you can store the other related data and recreate the button later when you need it.
+
+    const flaggedDrillData = {
+      openingName: openingName,
+      colorKey: colorKey
     };
-    localStorage.setItem('lastSelectedOpeningLineObj', JSON.stringify(lastSelectedOpeningLineObj));
-  
-    // Await the Firestore update and then open the URL
-    await updateOpeningUsedIndexes(uid, openingName, colorKey, updatedUsedIndexesArray);
-    openURLorPGN(selectedOpeningLine, colorKey);
-  });
-  
+
+    localStorage.setItem('flaggedDrillData_' + colorKey, JSON.stringify(flaggedDrillData));
+  }
+
   return button;
+}
+
+export async function handleButtonClick(openingName, colorKey) {
+  const uid = getCurrentUserId();
+  const fetchedDataResult = await handleOpeningButtonClick(uid, openingName, colorKey);
+  const selectedOpeningLines = fetchedDataResult.lines;
+  console.log("Selected Opening Lines:", selectedOpeningLines);
+  const selectedOpeningUsedIndexes = fetchedDataResult.usedIndexes;
+
+  const shuffleResult = shufflePickString(selectedOpeningUsedIndexes, selectedOpeningLines);
+  const selectedOpeningLine = shuffleResult.pickedString;
+  console.log("From userDataInteractions.js, Selected Opening Line:", selectedOpeningLine);
+  
+  const updatedUsedIndexesArray = shuffleResult.updatedUsedIndexes;
+
+  console.log("From userDataInteractions.js, Color Key:", colorKey);
+
+  // Update the global variable with the selected opening line
+  lastSelectedOpeningLineObj = {
+    pgn: selectedOpeningLine,
+    openingName,
+    colorKey,
+  };
+  localStorage.setItem('lastSelectedOpeningLineObj', JSON.stringify(lastSelectedOpeningLineObj));
+
+  // Await the Firestore update and then open the URL
+  await updateOpeningUsedIndexes(uid, openingName, colorKey, updatedUsedIndexesArray);
+  openURLorPGN(selectedOpeningLine, colorKey);
 }
 
 
