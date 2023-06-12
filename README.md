@@ -1,27 +1,25 @@
 # Repertoire
-# Welcome to Project-Repertoire! 
+# Welcome to Project-Repertoire
 
-## Introduction: 
+## What is this? 
 
-This web-app was created as a way to practice chess opening variations in a drill format, where each correct move from the user is automatically followed by the next move in the variation. This gives the feeling of playing a real game. Variations are selected using a shuffle scheme--which is basically random, but with history. I.E. A variation will not be selected a second time until all other variations from that opening have been selected. 
+This is a way to practice chess openings in a 'drill' format. When you make the right move, the next move is performed for you. Mistakes are ignored, but a "Mistakes" counter will increment. Once an opening has been imported, individual variations are selected using a shuffle scheme. (I.E. random, but with history. A variation will not be selected a second time until all other variations from that opening have been attempted.) 
 
-The web-app is designed to be used on a mobile device, but it can also be used on a desktop. [There are no plans to support drag and drop on a desktop in the near future.]
+The on a narrow screen--so if you're using a pc, I suggest resizing. For simplicity sake, Project Repertoire is using the chessboard-js javascript chess UI library.It's pretty basic, but it's working fine for now. Crucially this means: There are no plans to support drag and drop for chess moves in the near future.
+## User Account: 
 
-## Flagged Drills: 
+After creating a user-account, you'll have two openings by default: The VonPopiel Gambit [26 variations] and the Busch-Gass Gambit (accepted/denied combined) [95 variations]. William Graif FM is the author of the original Lichess studies used to create these default openings in this app. His openings are extremely fun (but also very dangerous!) to play and that's what inspired me to make this app. 
+## Openings and Flagged Drills: 
 
-After practicing a variation, there is an option to "Flag Last Drill". This will add the last selected variation to a bucket of Flagged Drills for White or Flagged Drills for Black. This is a good way to return to a sub-set of variations from many different openings. After practicing a Flagged Drill, there is a new option to "Remove Last Flagged Drill". This removes the drill that was just being practiced from whatever Flagged Drills bucket it came from. 
+You should now see buttons corresponding to each default opening. If press one of these buttons, a chessboard will load and you'll be prompted to make the first (or 2nd) move. As mentioned above, when you make the right move, the next move is performed for you. Mistakes are ignored, but a "Mistakes" counter will increment. If you're stuck, use the Show Correct Move button. For more info about the openings, scroll down to see a button for any links that were in the pgn text. 
 
-The "Flag Last Drill" and "Remove Last Flagged Drill" buttons are context-sensitive. I.E. they are hidden/visible at the right times. 
+There is an option to "Flag This Drill" or "Flag Last Drill"--depending on which page you're on. This will add the active variation to a bucket of "Flagged Drills for White" or "Flagged Drills for Black". With this feature we can return to a smaller sub-set of variations from many different openings. 
+
+The "Flag This Drill", "Flag Last Drill", "Unflag This Drill", and "Remove Last Flagged Drill" buttons are context-sensitive. I.E. they are hidden/visible at the right times. 
 
 At the botton of the chessboard page, there is also a "Flag This Drill"/"Unflag This Drill" button (depending on whether the last selected drill was a flagged drill or not). This button does exactly the same thing as "Flag Last Drill" and "Remove Last Flagged Drill" except it's from the chessboard page instead. If one of these buttons are used, they will be hidden on the index.html page to prevent redundantly adding/removing drills to the Flagged Drill list. 
 
-## User Account: 
-
-After creating a user-account, you'll have two openings by default: The VonPopiel Gambit [26 variations] and the Busch-Gass Gambit (accepted/denied combined) [95 variations]. William Graif FM is the author of the original Lichess studies used to create these openings in this app. He has (not quite yet) graciously given permission for them to be used in this context. You can see the original studies here: 
-
-- Busch-Gass - Gambit <https://lichess.org/study/0JdXDBuf>
-- Busch-Gass Gambit Denied - <https://lichess.org/study/ffhmxOxi>
-- VonPopiel Gambit - <https://lichess.org/study/FvLbSBZn>
+The "Practice a New Flagged Drill" button will randomly select a drill from the Flagged Drills for White or Flagged Drills for Black buckets without the user having to return to the main page in between. 
 
 ## Importing New Chess Openings:
 
