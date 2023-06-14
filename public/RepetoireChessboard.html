@@ -42,14 +42,13 @@
     <div class="text-left mt-1">
       <button id="showCorrectMoveButton" class="btn btn-secondary">Show Correct Move</button>
       <button id="resetButton" class="btn btn-secondary">Reset Board</button>
-      <button id="openInLichess" class="btn btn-secondary">Open in Lichess</button>
+      <button id="loadNewFlaggedDrillButton" class="btn btn-secondary">Practice a New Flagged Drill</button>
 
       <textarea id="pgnText" rows="3" class="form-control mb-3 mt-1"
         placeholder="Enter or paste PGN string here"></textarea>
+        <button id="openInLichess" class="btn btn-secondary">Analyze in Lichess</button>
         <button id="dynamicFlaggedDrillsButton" class="btn btn-secondary hide-button">Button Text</button>
-        <button id="loadNewFlaggedDrillButton" class="btn btn-secondary">Practice a New Flagged Drill</button>
-
-        <button id="returnToIndexButton" class="btn btn-secondary">Return to Main Page</button>
+        <button id="returnToIndexButton" class="btn btn-primary">Return to Main Page</button>
 
         <!-- div for links from the PGN Text -->
         <p id="pgn-links-heading" class="text-left mt-1">Links from the PGN Text:</p>
@@ -87,77 +86,67 @@
       if (pgnParam) {
         const pgnTextField = document.getElementById('pgnText');
         pgnTextField.value = pgnParam;
-  
+
         // Delay execution
         setTimeout(function () {
           // Extract URLs from PGN text and create buttons
           const httpsURLs = extractHttpsLinks(pgnParam);
           createURLButtons(httpsURLs);
         }, 700);
-  
-        // Clear the PGN string from localStorage after use
-        localStorage.removeItem("pgn");
       }
-  
+
       // Automatically click the "Load PGN Text" button
       // with a delay to allow the page to load
+      // There's got to be a better way to do this... :) 
       setTimeout(function () {
         document.getElementById('PgnTextButton').click();
       }, 500);
-  
+
       // Open in lichess button
       document.getElementById('openInLichess').addEventListener('click', () => openInLichess());
-  
+
       // Return to index button
       document.getElementById('returnToIndexButton').addEventListener('click', () => {
         // Redirect to index.html
         window.location.href = "index.html";
       });
-  
+
       // Function to extract URLs from a string
       function extractHttpsLinks(str) {
-        const regex = /\{\s*(\bhttps?:\/\/\S+)\s*\}/gi;
-        let matches = str.match(regex);
-
-        // If braces were included in the URL, remove them from each match
-        if (matches) {
-          matches = matches.map(url => url.replace(/[{}]/g, '').trim());
-        }
-
-        return matches;
+        // Regular expression that matches both https:// and www. at the start
+        const regex = /\b(https?:\/\/|www\.)\S+/gi;
+        return str.match(regex);
       }
 
-// Function to create buttons for each URL
-function createURLButtons(urls) {
-  const container = document.getElementById('pgn-links-container');
-  const heading = document.getElementById('pgn-links-heading');
+      // Function to create buttons for each URL
+      function createURLButtons(urls) {
+        const container = document.getElementById('pgn-links-container');
+        const heading = document.getElementById('pgn-links-heading');
 
-  // Clear any previous buttons
-  container.innerHTML = '';
+        // Clear any previous buttons
+        container.innerHTML = '';
 
-  // Check if urls is not null
-  if (urls && urls.length > 0) {
-    // Show the heading if there are any links
-    heading.style.display = 'block';
+        // Check if urls is not null
+        if (urls && urls.length > 0) {
+          // Show the heading if there are any links
+          heading.style.display = 'block';
 
-    urls.forEach((url) => {
-      let btn = document.createElement('button');
-      btn.className = "btn btn-secondary mt-2";
-      btn.textContent = url;
-      btn.addEventListener('click', function () {
-        window.open(url, '_blank');
-      });
-      container.appendChild(btn);
-    });
-  } else {
-    // Hide the heading if there are no links
-    heading.style.display = 'none';
-  }
-}
-
-
-
-  
+          urls.forEach((url) => {
+            let btn = document.createElement('button');
+            btn.className = "btn btn-secondary mt-2";
+            btn.textContent = url;
+            btn.addEventListener('click', function () {
+              // Add https:// to the start of the URL if it begins with www.
+              let fullUrl = url.startsWith('www.') ? 'https://' + url : url;
+              window.open(fullUrl, '_blank');
+            });
+            container.appendChild(btn);
+          });
+        } else {
+          // Hide the heading if there are no links
+          heading.style.display = 'none';
+        }
+      }
     });
   </script>
   
@@ -197,9 +186,6 @@ function createURLButtons(urls) {
   
   // Practice New Flagged Drill 
   document.getElementById('loadNewFlaggedDrillButton').addEventListener('click', () => {
-    // localStorage.setItem('action', 'loadRandomFlaggedDrill'); 
-    // // Redirect to index.html
-    // window.location.href = "index.html";
     practiceNewDrill();
   });
 
