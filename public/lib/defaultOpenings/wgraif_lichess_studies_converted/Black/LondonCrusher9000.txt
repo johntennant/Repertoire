@@ -1,0 +1,42 @@
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. Nc7+ Kd8 7. Nxa8 e5 8. Bxe5 Bb4+ 9. Ke2 d3+ 10. Qxd3 Qxe5 { [%cal Ge5a1] } 11. Rd1 Ne4 { [%cal Ge4c3,Gb7b6] } *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Na3 { [%cal Ga3c4] } 4... Qxb2 5. Nb5 cxd4 *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. b3 g6 { [%csl Yd4,Yg7][%cal Yf8g7,Yg7a1,Gd7d6,Ge7e5,Gf6h5,Gb8c6,Ge8g8] } 5. Nf3 Bg7 6. c3 *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 a6 *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nge2 Qa3 6. Rb1 Qa5 7. Rb5 Qd8 8. dxc5 b6 9. e4 Ba6 10. e5 Nh5 11. Be3 Bxb5 12. Nxb5 g6 13. Nec3 bxc5 14. Nd5 Na6 15. g4 Ng7 16. Nd6+ exd6 17. Nf6+ Ke7 18. Qxd6# { Aronian, L. - Giri, A., 1-0, chess.com Speed 3m+1spm 2018, https://lichess.org/Nh9icGxA } *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nge2 Qb6 6. Rb1 Qd8 7. dxc5 g6 8. g3 Na6 9. Qd4 Bg7 10. Bg2 Nh5 11. Be5 f6 12. Bf4 e5 13. Qc4 exf4 14. exf4 Bf8 15. O-O Nxc5 16. Nd4 Ng7 17. Rfe1+ Nce6 18. Nd5 Rb8 19. Rbd1 Be7 20. Nxe6 Nxe6 21. Rxe6 dxe6 22. Nc7+ Kf7 23. Rxd8 Rxd8 24. Bf3 a6 25. f5 b5 26. Qb3 Rb6 27. Qe3 Rbd6 28. Qh6 exf5 29. Qxh7+ Kf8 30. Qxg6 Be6 31. Nxe6+ Rxe6 32. Bh5 { Grischuk, A. - Adhiban, Baskaran, 1-0, World Rapid 2015, https://lichess.org/7jvzbVg8 } *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nge2 cxd4 6. Rb1 Qa3 7. exd4 *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. exd4 e5 7. Bxe5 Bb4+ 8. Ke2 Nc6 9. Nc7+ Kd8 10. Nxa8 Nxe5 11. dxe5 Qxe5+ 12. Kf3 Qf5+ { [%cal Gf3e3,Gf3e2,Gf5e4] } 13. Kg3 Ne4+ 14. Kh4 Be7# *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. exd4 e5 7. dxe5 Bb4+ 8. Ke2 Ne4 9. Rb1 Nc3+ 10. Nxc3 Qxc3 *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. exd4 e5 7. dxe5 Bb4+ 8. c3 Bxc3+ 9. Nxc3 Qxc3+ 10. Bd2 Qxe5+ 11. Be2 O-O 12. Nf3 Qc7 { [%cal Gb8c6,Gd7d5] } *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. exd4 e5 7. dxe5 Bb4+ 8. Bd2 Bxd2+ 9. Kxd2 Ne4+ 10. Ke1 Nc6 { [%csl Ge5][%cal Ge8g8] } 11. Nc7+ Kd8 12. Nxa8 Qc3+ 13. Ke2 Nd4+ 14. Qxd4 Qxd4 *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. exd4 e5 7. dxe5 Bb4+ 8. Bd2 Bxd2+ 9. Kxd2 Ne4+ 10. Ke3 Qxe5 11. Nf3 Qe7 { [%cal Ge4c3] } *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. exd4 e5 7. Nc7+ Kd8 8. Nxa8 Bb4+ 9. Bd2 Bxd2+ 10. Kxd2 Ne4+ 11. Ke1 Qc3+ 12. Ke2 b6 { [%cal Gc8a6] } *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. exd4 e5 7. Nc7+ Kd8 8. Bxe5 Bb4+ 9. Ke2 Nc6 10. Nxa8 Nxe5 *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. exd4 e5 7. Nc7+ Kd8 8. Bxe5 Bb4+ 9. Ke2 Nc6 10. Rb1 Qxa2 11. Nxa8 Nd5 { [%cal Gd5c3] } *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. exd4 e5 7. Rb1 Bb4+ 8. c3 Bxc3+ 9. Nxc3 Qxc3+ 10. Bd2 Qxd4 11. Nf3 *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. exd4 e5 7. Rb1 Bb4+ 8. Ke2 Qxa2 9. Rxb4 exf4 { [%cal Ge8g8] } 10. Nc7+ Kd8 11. Nxa8 Re8+ 12. Kf3 Qd5+ *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. exd4 e5 7. Rb1 Bb4+ 8. Ke2 Qxa2 9. Rxb4 exf4 { [%cal Ge8g8] } 10. Nc7+ Kd8 11. Nxa8 Re8+ 12. Kd3 d5 { [%cal Gc8f5,Gf6e4,Ga2a3,Ga2a5] } *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. exd4 e5 7. Bd2 Nc6 8. Nc7+ Kd8 9. Nxa8 Bb4 10. Nf3 Nxd4 11. Nxd4 Bxd2+ 12. Kxd2 Qxd4+ 13. Ke1 Qc3+ { [%cal Gc3a1] } *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. exd4 e5 7. Bd2 Nc6 8. Rb1 Qxa2 9. Ra1 Qb2 10. Bc3 Bb4 *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. exd4 e5 7. Bd2 Nc6 8. Rb1 Qxa2 9. Ra1 Qb2 10. Nf3 e4 11. Bc4 exf3 12. O-O { [%cal Gd2c3] } *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. exd4 e5 7. Bd2 Nc6 8. Rb1 Qxa2 9. Ra1 Qb2 10. Bc4 Nxd4 *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. exd4 e5 7. Bd2 Nc6 8. Nc7+ Kd8 9. Nxa8 Bb4 10. Bxb4 Qxb4+ 11. Qd2 Qb2 12. Rd1 Ne4 { [%cal Gb2b4] } *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. exd4 e5 7. Bxe5 Bb4+ 8. c3 Bxc3+ 9. Nxc3 Qxc3+ 10. Ke2 O-O { [%cal Gf8e8,Gd7d6,Gb8c6,Ya1c1,Yc3a3,Ye5f6,Yg7f6] } 11. Rc1 Qa3 *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. exd4 e5 7. Bxe5 Bb4+ 8. Ke2 Nc6 9. Qb1 Qxb1 10. Rxb1 Kd8 *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. Rb1 Qxa2 7. Nc7+ Kd8 8. Nxa8 e5 9. Bg5 { [%cal Gb8c6,Gf8b4,Gb7b6,Gc8b7] } 9... Qa5+ 10. Qd2 Qa2 11. Rd1 Qb2 { [%cal Gf8b4] } *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. Rb1 Qxa2 7. Ra1 Qb2 8. Rb1 Qa2 9. Ra1 *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. Rb1 Qxa2 7. Nc7+ Kd8 8. Nxa8 e5 9. Bxe5 Qa5+ { [%cal Ga5e5] } *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. Nc7+ Kd8 7. Nxa8 e5 8. Rb1 Bb4+ 9. Ke2 d3+ 10. Kxd3 Qc3+ 11. Ke2 exf4 12. Rb3 Ne4 *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. Nc3 Qxb2 5. Nb5 cxd4 6. Nc7+ Kd8 7. Nxa8 e5 8. Bxe5 Bb4+ 9. Ke2 d3+ 10. Qxd3 Qxe5 { [%cal Ge5a1] } 11. Rb1 Nd5 { [%cal Gd5c3] } *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. b3 cxd4 5. exd4 d6 6. Nf3 e5 7. dxe5 dxe5 8. Nxe5 Bc5 9. Nd3 O-O 10. Nxc5 Qxc5 11. Be2 Nc6 12. O-O Rd8 13. Nd2 Nd5 { [%cal Gd5f4] } 14. Bg3 Nc3 15. Qe1 Re8 { [%csl Ge2] } *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. b3 cxd4 5. Qxd4 Nc6 6. Qxb6 axb6 7. Nf3 g5 8. Bxg5 Ne4 { [%csl Ga1][%cal Gf8g7] } *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. b3 cxd4 5. Qxd4 Nc6 6. Qxb6 axb6 7. c3 e5 8. Bg5 Ne4 9. Bh4 Na5 { [%csl Ya2][%cal Ga5b3,Ya8a1] } *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. b3 cxd4 5. Qxd4 Nc6 6. Qxb6 axb6 7. c3 e5 8. Bg3 h5 9. h3 Ne4 { [%csl Ya2][%cal Ge4g3,Gf2g3,Gc6a5,Ya8a1,Rb1d2,Re4d2,Ga5b3] } *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. b3 cxd4 5. Qxd4 Nc6 6. Qxb6 axb6 7. Nf3 g5 8. Nxg5 Nd5 { [%csl Ga1][%cal Gf8g7] } *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. b3 cxd4 5. exd4 d6 6. c3 e5 7. dxe5 dxe5 8. Bxe5 Bc5 9. Bd4 O-O 10. Nf3 Bg4 11. Be2 Bxf3 12. Bxf3 Re8+ 13. Be2 Nc6 { [%csl Ya1][%cal Gc6d4,Gc3d4,Yc5d4,Yd4a1] } 14. Bxc5 Qxc5 15. O-O Rad8 { [%csl Ge2] } 16. Qc2 Nd4 { [%csl Gc3][%cal Gc5c2,Yd4c2,Yd4e2] } *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. b3 cxd4 5. exd4 d6 6. c3 e5 7. Bg3 Nc6 8. Nf3 e4 9. Nfd2 d5 *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. b3 cxd4 5. exd4 d6 6. c3 e5 7. dxe5 dxe5 8. Bxe5 Bc5 9. Bd4 O-O 10. Nf3 Bg4 11. Be2 Bxf3 12. Bxf3 Re8+ 13. Be2 Nc6 { [%csl Ya1][%cal Gc6d4,Gc3d4,Yc5d4,Yd4a1] } 14. Bxc5 Qxc5 15. O-O Rad8 { [%csl Ge2] } 16. Bd3 Ne5 *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. b3 cxd4 5. exd4 d6 6. c3 e5 7. dxe5 dxe5 8. Bxe5 Bc5 9. Bd4 O-O 10. Nf3 Bg4 11. Be2 Bxf3 12. Bxf3 Re8+ 13. Be2 Nc6 { [%csl Ya1][%cal Gc6d4,Gc3d4,Yc5d4,Yd4a1] } 14. Bxc5 Qxc5 15. O-O Rad8 { [%csl Ge2] } 16. Nd2 Qxc3 { [%csl Gd2][%cal Gd8d1] } *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. b3 cxd4 5. exd4 d6 6. Nf3 e5 7. dxe5 dxe5 8. Bxe5 Bc5 9. Bd4 O-O 10. Be2 Rd8 11. c3 Nc6 { [%csl Gd4] } *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. b3 cxd4 5. exd4 d6 6. Nf3 e5 7. dxe5 dxe5 8. Bxe5 Bc5 9. Bd4 O-O 10. Bxc5 Qxc5 11. Be2 Nc6 12. O-O Bg4 13. Nbd2 Rad8 14. Re1 Bxf3 15. Bxf3 Qc3 16. Re3 Qxd2 17. Qxd2 Rxd2 18. c4 Nd4 19. Rd1 Nxf3+ { PeaoDama - NM wgraif, 0-1, -, https://lichess.org/8w88NE5h } *
+1.{LondonCrusher9000} d4 Nf6 2. Bf4 c5 3. e3 Qb6 4. b3 cxd4 5. exd4 d6 6. Nf3 e5 7. dxe5 dxe5 8. Nxe5 Bc5 9. Nd3 O-O 10. Nxc5 Qxc5 11. Be2 Nc6 12. O-O Rd8 13. Bd3 Qd4 { [%cal Gd4a1,Gd4f4] } *

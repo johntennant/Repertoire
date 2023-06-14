@@ -145,155 +145,164 @@ async function populateRemoveOpeningSelect(uid) {
     }
   }
   
-  // Function to show the remove opening modal
-  function showRemoveOpeningModal() {
-    const modal = document.getElementById("remove-opening-modal");
-    modal.style.display = "block";
-    populateRemoveOpeningSelect(getCurrentUserId());
-  }
-  
-  // Function to hide the remove opening modal 
-  function hideRemoveOpeningModal() {
-    const modal = document.getElementById("remove-opening-modal");
-    modal.style.display = "none";
-  }
+// Function to show the remove opening modal
+function showRemoveOpeningModal() {
+  const modal = document.getElementById("remove-opening-modal");
+  modal.style.display = "block";
+  populateRemoveOpeningSelect(getCurrentUserId());
+}
+
+// Function to hide the remove opening modal 
+function hideRemoveOpeningModal() {
+  const modal = document.getElementById("remove-opening-modal");
+  modal.style.display = "none";
+}
 
 // Event listener for the "Remove" button inside the modal
 document.getElementById("remove-opening-confirm-btn").addEventListener("click", () => {
-    const selectedOption = document.getElementById("remove-opening-select").value;
-    console.log("Selected opening to remove:", selectedOption);
+  const selectedOption = document.getElementById("remove-opening-select").value;
+  console.log("Selected opening to remove:", selectedOption);
+
+  const [color, openingName] = selectedOption.split(":");
+
+  // Call openingToDeleteSelected function with the selected opening and color
+  openingToDeleteSelected(openingName, color);
+
+  hideRemoveOpeningModal();
+});
   
-    const [color, openingName] = selectedOption.split(":");
   
-    // Call openingToDeleteSelected function with the selected opening and color
-    openingToDeleteSelected(openingName, color);
-  
-    hideRemoveOpeningModal();
+// Event listener for the "Cancel" button inside the modal
+document.getElementById("remove-opening-cancel-btn").addEventListener("click", () => {
+  hideRemoveOpeningModal();
+});
+
+function showDeleteConfirmationDialog(onConfirm, onCancel) {
+  const confirmationDialog = document.createElement("div");
+  confirmationDialog.innerHTML = `
+    <div>
+      <p>Are you sure? There is no undo.</p>
+      <button id="yes-btn">Yes</button>
+      <button id="no-btn">No</button>
+    </div>
+  `;
+  document.body.appendChild(confirmationDialog);
+
+  const yesButton = confirmationDialog.querySelector("#yes-btn");
+  const noButton = confirmationDialog.querySelector("#no-btn");
+
+  yesButton.addEventListener("click", () => {
+    onConfirm();
+    document.body.removeChild(confirmationDialog);
   });
+
+  noButton.addEventListener("click", () => {
+    onCancel();
+    document.body.removeChild(confirmationDialog);
+  });
+}
   
+async function openingToDeleteSelected(selectedOpening, color) {
+  // Close the modal selection dialog
+  hideRemoveOpeningModal();
+
+  // Show delete confirmation dialog
+  showDeleteConfirmationDialog(async () => {
+    try {
+      const db = getFirestore();
+      const uid = getCurrentUserId();
+
+      // Remove the selected opening
+      await updateDoc(doc(db, "users", uid, "openings", color), {
+          [selectedOpening]: deleteField(),
+        });
+        
+      // Remove the corresponding UsedIndexes for the selected opening
+      await updateDoc(doc(db, "users", uid, "openings", color), {
+          [selectedOpening + "UsedIndexes"]: deleteField(),
+      }); 
+
+      // Refresh the openings UI
+      await removeAllButtons();
+      await buildUsersOpeningsUI(uid);
+    } catch (error) {
+      console.error("Error deleting opening:", error);
+    }
+  }, () => {
+    console.log("Deletion canceled");
+  });
+}
   
-  // Event listener for the "Cancel" button inside the modal
-  document.getElementById("remove-opening-cancel-btn").addEventListener("click", () => {
-    hideRemoveOpeningModal();
+
+// fetch default openings from url. 
+async function fetchTextFile(url) {
+  const response = await fetch(url);
+  const text = await response.text();
+  return text;
+}
+
+async function fetchDefaultOpenings() {
+  const openingsFilePaths = [
+    "lib/defaultOpenings/wgraif_lichess_studies_converted/Black/BudapestGraifGambit.txt",
+    "lib/defaultOpenings/wgraif_lichess_studies_converted/Black/BuschGassGambit.txt",
+    "lib/defaultOpenings/wgraif_lichess_studies_converted/Black/HeinCountergambit.txt",
+    "lib/defaultOpenings/wgraif_lichess_studies_converted/Black/JobavaGraifGambit.txt",
+    "lib/defaultOpenings/wgraif_lichess_studies_converted/Black/LondonCrusher9000.txt",
+    "lib/defaultOpenings/wgraif_lichess_studies_converted/Black/McCutcheonGambit.txt",
+    "lib/defaultOpenings/wgraif_lichess_studies_converted/White/KholmovGambitCaruanaLiang.txt",
+    "lib/defaultOpenings/wgraif_lichess_studies_converted/White/MarshallGambitNimzowitschDefense.txt",
+    "lib/defaultOpenings/wgraif_lichess_studies_converted/White/SneiderAttack.txt",
+    "lib/defaultOpenings/wgraif_lichess_studies_converted/White/TheOtherMarshallGambits.txt",
+    "lib/defaultOpenings/wgraif_lichess_studies_converted/White/Von-HennigGambit.txt",
+    "lib/defaultOpenings/wgraif_lichess_studies_converted/White/VonPopielGambit.txt",
+  ];
+
+  const openings = [];
+
+  for (const path of openingsFilePaths) {
+    const openingText = await fetchTextFile(path);
+    const colorKey = path.includes('/White/') ? 'asWhite' : 'asBlack';
+    const openingName = path.split("/").pop().replace(".txt", "");
+    openings.push({
+      openingName,
+      colorKey,
+      lines: openingText.split("\n"),
+    });
+  }
+
+  return openings;
+}
+
+//:::::::::::::Create default openings::::::::::::::::::::::::
+export async function createDefaultOpeningsForNewUser(uid) {
+  const db = getFirestore();
+  const userRef = doc(db, "users", uid);
+
+  const defaultOpenings = await fetchDefaultOpenings();
+
+  const batch = writeBatch(db);
+
+  // Set up the database structure
+  const whiteOpeningRef = doc(userRef, "openings", "asWhite");
+  const blackOpeningRef = doc(userRef, "openings", "asBlack");
+  batch.set(whiteOpeningRef, {});
+  batch.set(blackOpeningRef, {});
+
+  // Initialize default openings
+  defaultOpenings.forEach(opening => {
+    const openingRef = opening.colorKey === 'asWhite' ? whiteOpeningRef : blackOpeningRef;
+    batch.update(openingRef, {
+      [opening.openingName]: opening.lines,
+    });
   });
 
-  function showDeleteConfirmationDialog(onConfirm, onCancel) {
-    const confirmationDialog = document.createElement("div");
-    confirmationDialog.innerHTML = `
-      <div>
-        <p>Are you sure? There is no undo.</p>
-        <button id="yes-btn">Yes</button>
-        <button id="no-btn">No</button>
-      </div>
-    `;
-    document.body.appendChild(confirmationDialog);
-  
-    const yesButton = confirmationDialog.querySelector("#yes-btn");
-    const noButton = confirmationDialog.querySelector("#no-btn");
-  
-    yesButton.addEventListener("click", () => {
-      onConfirm();
-      document.body.removeChild(confirmationDialog);
-    });
-  
-    noButton.addEventListener("click", () => {
-      onCancel();
-      document.body.removeChild(confirmationDialog);
-    });
-  }
-  
-  async function openingToDeleteSelected(selectedOpening, color) {
-    // Close the modal selection dialog
-    hideRemoveOpeningModal();
-  
-    // Show delete confirmation dialog
-    showDeleteConfirmationDialog(async () => {
-      try {
-        const db = getFirestore();
-        const uid = getCurrentUserId();
-  
-        // Remove the selected opening
-        await updateDoc(doc(db, "users", uid, "openings", color), {
-            [selectedOpening]: deleteField(),
-          });
-          
-        // Remove the corresponding UsedIndexes for the selected opening
-        await updateDoc(doc(db, "users", uid, "openings", color), {
-            [selectedOpening + "UsedIndexes"]: deleteField(),
-        }); 
-  
-        // Refresh the openings UI
-        await removeAllButtons();
-        await buildUsersOpeningsUI(uid);
-      } catch (error) {
-        console.error("Error deleting opening:", error);
-      }
-    }, () => {
-      console.log("Deletion canceled");
-    });
-  }
-  
+  // Initialize FlaggedDrills arrays
+  batch.update(whiteOpeningRef, {
+    FlaggedDrills: [],
+  });
+  batch.update(blackOpeningRef, {
+    FlaggedDrills: [],
+  });
 
-  // fetch default openings from url. 
-  async function fetchTextFile(url) {
-    const response = await fetch(url);
-    const text = await response.text();
-    return text;
-  }
-  
-  async function fetchDefaultOpenings() {
-    const whiteOpeningsUrl = "lib/defaultOpenings/VonPopielGambit.txt";
-    const blackOpeningsUrl = "lib/defaultOpenings/BuschGassGambit.txt";
-  
-    const whiteOpening = await fetchTextFile(whiteOpeningsUrl);
-    const blackOpening = await fetchTextFile(blackOpeningsUrl);
-  
-    return [
-      {
-        openingName: "VonPopielGambit",
-        colorKey: "asWhite",
-        lines: whiteOpening.split("\n"),
-      },
-      {
-        openingName: "BuschGassGambit",
-        colorKey: "asBlack",
-        lines: blackOpening.split("\n"),
-      }
-    ];
-  }
-  
-
-  //:::::::::::::Create default openings::::::::::::::::::::::::
-  export async function createDefaultOpeningsForNewUser(uid) {
-    const db = getFirestore();
-    const userRef = doc(db, "users", uid);
-  
-    const defaultOpenings = await fetchDefaultOpenings();
-  
-    const batch = writeBatch(db);
-  
-    // Set up the database structure
-    const whiteOpeningRef = doc(userRef, "openings", "asWhite");
-    const blackOpeningRef = doc(userRef, "openings", "asBlack");
-    batch.set(whiteOpeningRef, {});
-    batch.set(blackOpeningRef, {});
-  
-    // Initialize default openings
-    defaultOpenings.forEach(opening => {
-      const openingRef = opening.colorKey === 'asWhite' ? whiteOpeningRef : blackOpeningRef;
-      batch.update(openingRef, {
-        [opening.openingName]: opening.lines,
-      });
-    });
-  
-    // Initialize FlaggedDrills arrays
-    batch.update(whiteOpeningRef, {
-      FlaggedDrills: [],
-    });
-    batch.update(blackOpeningRef, {
-      FlaggedDrills: [],
-    });
-  
-    await batch.commit();
-  }
-  
+  await batch.commit();
+}
