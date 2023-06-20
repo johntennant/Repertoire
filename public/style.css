@@ -28,6 +28,19 @@
     margin-right: 3px;
     margin-top: 5px;
   }
+
+  .btn-primary {
+    background-color: #2f4443 !important; 
+    color: #fff !important; 
+    border-color:#000000 !important;
+  }
+
+  .btn-info {
+    background-color: #7d3232 !important; 
+    color: #fff !important; 
+    border-color:#000000 !important;
+  }
+
   
   button:hover {
     background-color: #2f4443;
@@ -63,6 +76,15 @@
   a:visited {
     color: #d3d3d3;  
   }
+
+  #pgn-links-heading {
+    margin-bottom: 0 !important;
+}
+
+#pgn-links-container {
+    margin-top: 0 !important;
+}
+
   
 
   /* Default style for desktop and larger screens */
@@ -78,6 +100,11 @@
   .container {
     margin: 1rem 0;
   }
+
+  /* .pgn-links-container {
+    margin-top: 0;
+    padding: 0;
+  } */
   
   /* Media Queries */
   @media screen and (max-width: 768px) {

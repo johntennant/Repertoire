@@ -43,7 +43,7 @@
     <div class="text-left mt-1">
       <button id="showCorrectMoveButton" class="btn btn-secondary">Show Correct Move</button>
       <button id="resetButton" class="btn btn-secondary">Reset Board</button>
-      <button id="loadNewFlaggedDrillButton" class="btn btn-secondary">Practice a New Flagged Line</button>
+      <button id="loadNewFlaggedDrillButton" class="btn btn-primary">Practice a New Flagged Line</button>
 
       <textarea id="pgnText" rows="3" class="form-control mb-3 mt-1"
         placeholder="Enter or paste PGN string here"></textarea>
@@ -51,8 +51,7 @@
       <button id="returnToIndexButton" class="btn btn-primary">Return to Main Page</button>
 
       <!-- div for links from the PGN Text -->
-      <p id="pgn-links-heading" class="text-left mt-1">Links from the PGN Text:</p>
-      <div id="pgn-links-container"></div>
+      <p id="pgn-links-heading" class="text-left mt-1">Links from the PGN Text:</p><div id="pgn-links-container"></div>
       
       <div class="text-left mt-4">
         <a href="https://github.com/johntennant/Repertoire" target="_blank">Project Repertoire Github Page</a>
@@ -133,7 +132,7 @@
 
           urls.forEach((url) => {
             let btn = document.createElement('button');
-            btn.className = "btn btn-secondary mt-2";
+            btn.className = "btn btn-info mt-2";
             btn.textContent = url;
             btn.addEventListener('click', function () {
               // Add https:// to the start of the URL if it begins with www.
