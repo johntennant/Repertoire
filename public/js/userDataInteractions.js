@@ -54,7 +54,7 @@ async function createOpeningButton(openingName, colorKey, openingData) {
   button.classList.add("opening-button", colorKey);
 
   if (openingName === "FlaggedDrills") {
-    button.textContent = `Flagged Drills for ${colorKey === "asWhite" ? "White" : "Black"} ${openingData.length}`;
+    button.textContent = `Flagged Lines for ${colorKey === "asWhite" ? "White" : "Black"} ${openingData.length}`;
   } else {
     button.textContent = `${openingName} ${openingData.length}`;
     console.log("From userDataInteractions.js, openingName:", openingName);

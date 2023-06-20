@@ -20,7 +20,7 @@ export const flagLastDrill = async (uid) => {
     });
     const color = colorKey === "asWhite" ? "White" : "Black";
     console.log(`Drill from '${openingName}' as '${colorKey}' added to FlaggedDrills.`);
-    showTemporaryMessage(`Last drill from ${openingName} was added to Flagged Drills for ${color}.`);
+    showTemporaryMessage(`Last drill from ${openingName} was added to Flagged Lines for ${color}.`);
   } else {
     console.error("No lastSelectedOpeningLineObj found in local storage.");
   }
@@ -64,7 +64,7 @@ export const removeLastFlaggedDrill = async (uid) => {
       });
 
       console.log("Last flagged drill removed.");
-      showTemporaryMessage("Last flagged drill removed.");
+      showTemporaryMessage("Last flagged line removed.");
     } else {
       console.log("No matching drill found in FlaggedDrills.");
       showTemporaryMessage("No matching drill found in FlaggedDrills.");

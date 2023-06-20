@@ -71,7 +71,7 @@
   }
   
   /* Other Containers */
-  #openings-container, #flagged-drills-container, #manage-openings-container, #login-container {
+  #openings-container, #flagged-drills-container, #manage-openings-container, #login-container, #hidden-container {
     display: none;
   }
   
