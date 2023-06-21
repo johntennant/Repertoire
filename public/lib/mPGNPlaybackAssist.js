@@ -136,8 +136,9 @@ function updateMoveNumber() {
   const moveNumberElement = document.getElementById('move-number');
   const adjustedIndex = sanArrayIndex + 1;
   const moveNumber = Math.ceil(adjustedIndex / 2);
-  
-  moveNumberElement.textContent = `Move: ${moveNumber}`;
+  const numbersOfMoves = Math.ceil(sanArray.length / 2);
+
+  moveNumberElement.textContent = `Move: ${moveNumber}/${numbersOfMoves}`;
   console.log(`Move: ${moveNumber}`);
 }
 

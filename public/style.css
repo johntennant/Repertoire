@@ -130,6 +130,10 @@
   /* Media Queries */
   @media screen and (max-width: 768px) {
 
+    .login-container {
+      width: 100%;
+    }
+
     .container-board {
       margin: 0;
       padding: 0;
