@@ -17,8 +17,8 @@
         <input type="email" id="email" required>
         <label for="password">Password:</label>
         <input type="password" id="password" required>
-        <button type="submit" id="login-btn">Log In</button>
-        <button type="button" id="signup-btn">Sign Up</button>
+        <button type="submit" id="login-btn" class="btn-primary">Log In</button>
+        <button type="button" id="signup-btn" class="btn-primary">Sign Up</button>
       </form>
     </div>
     <!-- <button type="button" id="get-user-data-btn">Get User Data</button> -->
@@ -28,8 +28,8 @@
 
     <div id="flagged-drills-container" class="hidden-container"></div>
     <div id="flagged-drills-interact-container" class="container">
-      <button type="button" id="flag-last-drill-button">Flag Last Line</button>
-      <button id="remove-last-flagged-drill-btn" class="hidden">Unflag Last Line</button>
+      <button type="button" id="flag-last-drill-button"class="btn-primary hidden">Flag Last Line</button>
+      <button id="remove-last-flagged-drill-btn" class="btn-primary hidden">Unflag Last Line</button>
     </div>
     
     <div id="openings-for-white-container" class="container">
@@ -42,12 +42,12 @@
     
 
     <div id="manage-openings-container" class="container">
-      <button type="button" id="import-new-opening-btn">Import New Opening</button>
-      <button type="button" id="remove-opening-btn">Remove Opening</button>
+      <button type="button" id="import-new-opening-btn" class="btn-primary">Import New Opening</button>
+      <button type="button" id="remove-opening-btn" class="btn-primary">Remove Opening</button>
     </div>
 
-    <button type="button" id="logout-btn">Log Out</button>
-    <button type="button" id="toggle-readme-btn">Show Read Me</button>
+    <button type="button" id="logout-btn" class="btn-primary">Log Out</button>
+    <button type="button" id="toggle-readme-btn" class="btn-primary">Show Read Me</button>
     <pre id="readme-content" style="display: none;"></pre>
     
     <!-- Insert a couple of lines of empty space here. -->
@@ -171,8 +171,8 @@
       <div class="modal-content">
         <h3>Select an opening to remove</h3>
         <select id="remove-opening-select"></select>
-        <button id="remove-opening-confirm-btn">Remove</button>
-        <button id="remove-opening-cancel-btn">Cancel</button>
+        <button id="remove-opening-confirm-btn" class="btn-primary">Remove</button>
+        <button id="remove-opening-cancel-btn" class="btn-primary">Cancel</button>
       </div>
     </div>
 

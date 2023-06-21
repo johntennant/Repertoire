@@ -6,6 +6,7 @@ let badGuessHintThreshold = 3;
 let badGuesses = 0;
 let game = new Chess();
 let mistakeCount = 0;
+let numberOfHints = 0;
 let pgnLines = [];
 let sanArray = pgnToSanArray(PGN_STRING);
 let sanArrayIndex = 0;
@@ -124,9 +125,9 @@ function showCorrectMove() {
 
 // Update the mistakes count.
 
-function updateMistakeCount(mistakes) {
+function updateMistakeCount(mistakes, hints) {
   const mistakesCountElement = document.getElementById('mistake-count');
-  mistakesCountElement.textContent = `Mistakes: ${mistakes}`;
+  mistakesCountElement.textContent = `Mistakes: ${mistakes}/${hints}`;
   console.log(`Mistakes: ${mistakes}`);
 }
 
@@ -214,7 +215,13 @@ document.getElementById('makeFirstMoveButton').addEventListener('click', makeFir
 
 //Button to show correct move
 
-document.getElementById('showCorrectMoveButton').addEventListener('click', showCorrectMove);
+// document.getElementById('showCorrectMoveButton').addEventListener('click', showCorrectMove);
+document.getElementById('showCorrectMoveButton').addEventListener('click', () => {
+  showCorrectMove();
+  numberOfHints++;
+  updateMistakeCount(mistakeCount, numberOfHints);
+});
+
 
 //This is called when the user makes a mistake. It stores the PGN into an array of all the mistakes made by the user--ever. 
 
@@ -255,7 +262,8 @@ resetGame();
 function resetGame() {
   sanArrayIndex = 0; // Reset the sanArrayIndex to 0 so that the next move is the first move in the array - the first move in the PGN Text that was loaded. 
   mistakeCount = 0; // Reset the mistake count to 0
-  updateMistakeCount(mistakeCount); // Update the mistake count on the page
+  numberOfHints = 0; // Reset the number of hints to 0
+  updateMistakeCount(mistakeCount, numberOfHints); // Update the mistake count on the page
   board.setPosition(ChessUtils.FEN.startId);
   game.reset();
   updateGameInfo('Next player is white.');

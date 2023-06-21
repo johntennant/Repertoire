@@ -36,6 +36,19 @@ export function testFunction() {
 
 window.testFunction = testFunction;
 
+// export async function practiceNewDrill() {
+//   const flaggedDrillData_asWhite = JSON.parse(
+//     localStorage.getItem("flaggedDrillData_asWhite")
+//   );
+//   const flaggedDrillData_asBlack = JSON.parse(
+//     localStorage.getItem("flaggedDrillData_asBlack")
+//   );
+//   const selectedFlaggedDrillsColor = Math.random() < 0.5 ? flaggedDrillData_asWhite : flaggedDrillData_asBlack;
+
+//   handleButtonClick(selectedFlaggedDrillsColor.openingName, selectedFlaggedDrillsColor.colorKey);
+//   console.log(selectedFlaggedDrillsColor);
+// }
+
 export async function practiceNewDrill() {
   const flaggedDrillData_asWhite = JSON.parse(
     localStorage.getItem("flaggedDrillData_asWhite")
@@ -43,15 +56,26 @@ export async function practiceNewDrill() {
   const flaggedDrillData_asBlack = JSON.parse(
     localStorage.getItem("flaggedDrillData_asBlack")
   );
-  const selectedFlaggedDrillsColor = Math.random() < 0.5 ? flaggedDrillData_asWhite : flaggedDrillData_asBlack;
+  const lastSelectedColor = localStorage.getItem("lastSelectedColor") || "black"; // defaults to "black" if not set before
+  let selectedFlaggedDrillsColor;
+
+  if(lastSelectedColor === "white") {
+    selectedFlaggedDrillsColor = flaggedDrillData_asBlack;
+    localStorage.setItem("lastSelectedColor", "black");
+  } else {
+    selectedFlaggedDrillsColor = flaggedDrillData_asWhite;
+    localStorage.setItem("lastSelectedColor", "white");
+  }
 
   handleButtonClick(selectedFlaggedDrillsColor.openingName, selectedFlaggedDrillsColor.colorKey);
   console.log(selectedFlaggedDrillsColor);
 }
 
+
 async function createOpeningButton(openingName, colorKey, openingData) {
   const button = document.createElement("button");
-  button.classList.add("opening-button", colorKey);
+  
+  button.classList.add("opening-button", "btn-primary", colorKey);
 
   if (openingName === "FlaggedDrills") {
     button.textContent = `Flagged Lines for ${colorKey === "asWhite" ? "White" : "Black"} ${openingData.length}`;
@@ -61,7 +85,6 @@ async function createOpeningButton(openingName, colorKey, openingData) {
     console.log("From userDataInteractions.js, openingData:", [openingName + 'UsedIndexes']);
   }
 
-  button.classList.add("opening-button");
   button.addEventListener("click", () => handleButtonClick(openingName, colorKey));
 
   // Save to localStorage if it's a flagged drill button
@@ -79,6 +102,7 @@ async function createOpeningButton(openingName, colorKey, openingData) {
 
   return button;
 }
+
 
 export async function handleButtonClick(openingName, colorKey) {
   const uid = getCurrentUserId();
@@ -139,6 +163,7 @@ export async function refreshFlaggedDrillsButtons() {
       // Now we recreate the buttons for each opening using the 'createOpeningButton' function.
       // The newly created button is then appended to the container.
       const newButton = await createOpeningButton(openingName, colorKey, fetchedDataResult.lines);
+      newButton.classList.add("opening-button", "btn-primary", colorKey);
       flaggedDrillsContainer.appendChild(newButton);
     }
   }
