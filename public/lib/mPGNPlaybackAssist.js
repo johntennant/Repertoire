@@ -310,7 +310,7 @@ function pieceMove(move) {
     updateGameInfo();
     badGuesses++;
     mistakeCount++;
-    updateMistakeCount(mistakeCount);
+    updateMistakeCount(mistakeCount, numberOfHints);
     // console.log(mistakeCount);
     console.log("Bad guess number ", badGuesses, "out of ", badGuessHintThreshold);
     console.log(game.pgn())
