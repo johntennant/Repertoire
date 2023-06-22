@@ -36,19 +36,6 @@ export function testFunction() {
 
 window.testFunction = testFunction;
 
-// export async function practiceNewDrill() {
-//   const flaggedDrillData_asWhite = JSON.parse(
-//     localStorage.getItem("flaggedDrillData_asWhite")
-//   );
-//   const flaggedDrillData_asBlack = JSON.parse(
-//     localStorage.getItem("flaggedDrillData_asBlack")
-//   );
-//   const selectedFlaggedDrillsColor = Math.random() < 0.5 ? flaggedDrillData_asWhite : flaggedDrillData_asBlack;
-
-//   handleButtonClick(selectedFlaggedDrillsColor.openingName, selectedFlaggedDrillsColor.colorKey);
-//   console.log(selectedFlaggedDrillsColor);
-// }
-
 export async function practiceNewDrill() {
   const flaggedDrillData_asWhite = JSON.parse(
     localStorage.getItem("flaggedDrillData_asWhite")
@@ -71,14 +58,25 @@ export async function practiceNewDrill() {
   console.log(selectedFlaggedDrillsColor);
 }
 
-
 async function createOpeningButton(openingName, colorKey, openingData) {
+  // Unique ID based on color and openingName
+  let buttonId = `${openingName}-${colorKey}`;
+
+  // Check if a button with the unique ID already exists
+  if (openingName === "FlaggedDrills" && document.getElementById(buttonId)) {
+    console.log(`Button for ${openingName} as ${colorKey} already exists.`);
+    return; // exit the function
+  }
+
   const button = document.createElement("button");
-  
+
   button.classList.add("opening-button", "btn-primary", colorKey);
 
   if (openingName === "FlaggedDrills") {
     button.textContent = `Flagged Lines for ${colorKey === "asWhite" ? "White" : "Black"} ${openingData.length}`;
+
+    // Assign the unique ID to the button
+    button.id = buttonId;
   } else {
     button.textContent = `${openingName} ${openingData.length}`;
     console.log("From userDataInteractions.js, openingName:", openingName);
