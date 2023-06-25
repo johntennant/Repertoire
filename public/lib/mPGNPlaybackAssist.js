@@ -127,7 +127,7 @@ function showCorrectMove() {
 
 function updateMistakeCount(mistakes, hints) {
   const mistakesCountElement = document.getElementById('mistake-count');
-  mistakesCountElement.textContent = `Mistakes: ${mistakes}/${hints}`;
+  mistakesCountElement.textContent = `Mistakes: ${mistakes}:${hints}`;
   console.log(`Mistakes: ${mistakes}`);
 }
 

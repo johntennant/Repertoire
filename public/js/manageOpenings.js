@@ -58,8 +58,8 @@ function showColorSelectionDialog(openingName, pgnArray) {
     colorSelectionDialog.innerHTML = `
       <div>
       <p>Select the color you want to play:</p>
-      <button id="play-as-white-btn">Play as White</button>
-      <button id="play-as-black-btn">Play as Black</button>
+      <button id="play-as-white-btn" class="btn-info">Play as White</button>
+      <button id="play-as-black-btn" class="btn-info">Play as Black</button>
       </div>
     `;
     document.body.appendChild(colorSelectionDialog);
@@ -218,9 +218,9 @@ async function openingToDeleteSelected(selectedOpening, color) {
         });
         
       // Remove the corresponding UsedIndexes for the selected opening
-      await updateDoc(doc(db, "users", uid, "openings", color), {
-          [selectedOpening + "UsedIndexes"]: deleteField(),
-      }); 
+      // await updateDoc(doc(db, "users", uid, "openings", color), {
+      //     [selectedOpening + "UsedIndexes"]: deleteField(),
+      // }); 
 
       // Refresh the openings UI
       await removeAllButtons();
@@ -249,10 +249,10 @@ async function fetchDefaultOpenings() {
     "lib/defaultOpenings/wgraif_lichess_studies_converted/Black/JobavaGraifGambit.txt",
     "lib/defaultOpenings/wgraif_lichess_studies_converted/Black/LondonCrusher9000.txt",
     "lib/defaultOpenings/wgraif_lichess_studies_converted/Black/McCutcheonGambit.txt",
-    "lib/defaultOpenings/wgraif_lichess_studies_converted/White/KholmovGambitCaruanaLiang.txt",
-    "lib/defaultOpenings/wgraif_lichess_studies_converted/White/MarshallGambitNimzowitschDefense.txt",
+    "lib/defaultOpenings/wgraif_lichess_studies_converted/White/KholmovGambit.txt",
+    "lib/defaultOpenings/wgraif_lichess_studies_converted/White/MarshallGambitNimzowitsch.txt",
     "lib/defaultOpenings/wgraif_lichess_studies_converted/White/SneiderAttack.txt",
-    "lib/defaultOpenings/wgraif_lichess_studies_converted/White/TheOtherMarshallGambits.txt",
+    "lib/defaultOpenings/wgraif_lichess_studies_converted/White/MarshallGambitsOther.txt",
     "lib/defaultOpenings/wgraif_lichess_studies_converted/White/Von-HennigGambit.txt",
     "lib/defaultOpenings/wgraif_lichess_studies_converted/White/VonPopielGambit.txt",
   ];

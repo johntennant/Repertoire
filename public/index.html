@@ -85,7 +85,7 @@
       const auth = getAuth(app);
       
       import { getCurrentUserId, fetchUserData, buildUsersOpeningsUI, removeAllButtons, loadNewFlaggedDrill } from "./js/userDataInteractions.js";
-      import { flagLastDrill, removeLastFlaggedDrill } from "./js/flaggedDrillsAddRemove.js";
+      import { flagLastDrill, removeLastFlaggedDrill, checkFlaggedDrillsButtons } from "./js/flaggedDrillsAddRemove.js";
     
       // Add event listener for authentication state changes
       auth.onAuthStateChanged(async (user) => {
@@ -135,6 +135,7 @@
             }
             // Always clear the action after running it
             localStorage.removeItem('action');
+            setTimeout(checkFlaggedDrillsButtons, 1000);
           }
     
         } else { // User is signed out or there is no user signed in

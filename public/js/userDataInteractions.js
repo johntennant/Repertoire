@@ -58,7 +58,7 @@ export async function practiceNewDrill() {
   console.log(selectedFlaggedDrillsColor);
 }
 
-async function createOpeningButton(openingName, colorKey, openingData) {
+async function createOpeningButton(openingName, colorKey, openingData, openingDataUsedIndexes) {
   // Unique ID based on color and openingName
   let buttonId = `${openingName}-${colorKey}`;
 
@@ -73,12 +73,16 @@ async function createOpeningButton(openingName, colorKey, openingData) {
   button.classList.add("opening-button", "btn-primary", colorKey);
 
   if (openingName === "FlaggedDrills") {
-    button.textContent = `Flagged Lines for ${colorKey === "asWhite" ? "White" : "Black"} ${openingData.length}`;
+    const numberOfUsedIndexes = openingDataUsedIndexes.length;
+    console.log(numberOfUsedIndexes);
+    button.textContent = `Flagged Lines for ${colorKey === "asWhite" ? "White" : "Black"} ${numberOfUsedIndexes}/${openingData.length}`;
 
     // Assign the unique ID to the button
     button.id = buttonId;
   } else {
-    button.textContent = `${openingName} ${openingData.length}`;
+    const numberOfUsedIndexes = openingDataUsedIndexes.length;
+    console.log(numberOfUsedIndexes);
+    button.textContent = `${openingName} ${numberOfUsedIndexes}/${openingData.length}`;
     console.log("From userDataInteractions.js, openingName:", openingName);
     console.log("From userDataInteractions.js, openingData:", [openingName + 'UsedIndexes']);
   }
@@ -160,7 +164,8 @@ export async function refreshFlaggedDrillsButtons() {
 
       // Now we recreate the buttons for each opening using the 'createOpeningButton' function.
       // The newly created button is then appended to the container.
-      const newButton = await createOpeningButton(openingName, colorKey, fetchedDataResult.lines);
+      // const newButton = await createOpeningButton(openingName, colorKey, fetchedDataResult.lines);
+      const newButton = await createOpeningButton(openingName, colorKey, fetchedDataResult.lines, fetchedDataResult.usedIndexes);
       newButton.classList.add("opening-button", "btn-primary", colorKey);
       flaggedDrillsContainer.appendChild(newButton);
     }
@@ -168,29 +173,34 @@ export async function refreshFlaggedDrillsButtons() {
 }
 
 
-
 const createButtonsForOpenings = async (openingData, colorKey) => {
   const buttons = [];
 
-  for (const openingName in openingData) { 
+  for (const openingName in openingData) {
     if (openingName.endsWith("UsedIndexes")) continue;
-     if (openingName === "FlaggedDrills") {
-      const flaggedDrillsButton = await createOpeningButton(openingName, colorKey, openingData[openingName]);
+
+    // Check if [openingName]+UsedIndexes is present, if not create it as an empty array
+    if (!openingData.hasOwnProperty(openingName + 'UsedIndexes')) {
+      openingData[openingName + 'UsedIndexes'] = [];
+    }
+
+    if (openingName === "FlaggedDrills") {
+      const flaggedDrillsButton = await createOpeningButton(openingName, colorKey, openingData[openingName], openingData[openingName + 'UsedIndexes']);
       flaggedDrillsButton.classList.add("flagged-drills-button"); // Add a class for styling
       flaggedDrillsContainer.appendChild(flaggedDrillsButton); // Add the button to the DOM
     } else {
-      const openingButton = await createOpeningButton(openingName, colorKey, openingData[openingName]);
+      const openingButton = await createOpeningButton(openingName, colorKey, openingData[openingName], openingData[openingName + 'UsedIndexes']);
       if (colorKey === "asWhite") {
         openingsForWhiteContainer.appendChild(openingButton); // Add the button to the DOM
       } else {
         openingsForBlackContainer.appendChild(openingButton); // Add the button to the DOM
       }
     }
-    
   }
 
   return buttons;
 };
+
 
 const processDocSnapshot = async (docSnapshot, colorKey) => {
   if (!docSnapshot.exists()) {
@@ -198,7 +208,7 @@ const processDocSnapshot = async (docSnapshot, colorKey) => {
     return [];
   }
 
-  console.log("Opening data:", docSnapshot.data());
+  // console.log("Opening data:", docSnapshot.data());
   const openingData = docSnapshot.data();
   const buttons = await createButtonsForOpenings(openingData, colorKey);
   return buttons;
@@ -317,7 +327,7 @@ export function getCurrentUserId() {
   const user = auth.currentUser;
 
   if (user) {
-    console.log(user.uid);
+    // console.log(user.uid);
     return user.uid;
   } else {
     console.log("No user is signed in.");

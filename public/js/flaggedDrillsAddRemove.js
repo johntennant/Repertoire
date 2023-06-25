@@ -74,3 +74,16 @@ export const removeLastFlaggedDrill = async (uid) => {
   }
   refreshFlaggedDrillsButtons();
 };
+
+export function checkFlaggedDrillsButtons() {
+  const asWhiteButton = document.querySelector("#FlaggedDrills-asWhite");
+  const asBlackButton = document.querySelector("#FlaggedDrills-asBlack");
+
+  // If either button is missing, force reload the page
+  if (!asWhiteButton || !asBlackButton) {
+    console.log("FlaggedDrillsButtons not found, reloading the page.");
+    location.reload();
+  } else {
+    console.log("FlaggedDrillsButtons found."); 
+  }
+}
