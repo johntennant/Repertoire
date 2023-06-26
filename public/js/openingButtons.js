@@ -1,6 +1,5 @@
 import { getFirestore, doc, getDoc, collection } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js";
 
-
 // Retrieve the array of opening lines from the opening data.
 // Also retrieve the array of used indexes from the opening data.
 // Return an object containing the opening lines, used indexes, and color key.

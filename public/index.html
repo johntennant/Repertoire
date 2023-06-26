@@ -84,8 +84,9 @@
       const analytics = getAnalytics(app);
       const auth = getAuth(app);
       
-      import { getCurrentUserId, fetchUserData, buildUsersOpeningsUI, removeAllButtons, loadNewFlaggedDrill } from "./js/userDataInteractions.js";
+      import { getCurrentUserId, fetchUserData, buildUsersOpeningsUI, removeAllButtons, loadNewFlaggedDrill, refreshFlaggedDrillsButtons } from "./js/userDataInteractions.js";
       import { flagLastDrill, removeLastFlaggedDrill, checkFlaggedDrillsButtons } from "./js/flaggedDrillsAddRemove.js";
+      import { compareServerData, storeOpeningDataInLocalStorage } from "./js/localStorageReadWrite.js";
     
       // Add event listener for authentication state changes
       auth.onAuthStateChanged(async (user) => {
@@ -103,8 +104,19 @@
           loginContainer.style.display = "none";
           // Show the logout button
           logoutButton.style.display = "block";
+
+          // Check if the data in localStorage is the same as in Firebase
+          const isDataEqual = await compareServerData(user.uid);
+          if (!isDataEqual) {
+            // Fetch data from server
+            const openingData = await fetchUserData(user.uid);
+            // Store the fetched data in localStorage
+            storeOpeningDataInLocalStorage(openingData);
+          }
+
           // Get the user data and make the buttons. 
           buildUsersOpeningsUI(user.uid);
+
           // Show the import and remove buttons
           manageOpeningsContainer.style.display = "block";
     
@@ -128,6 +140,7 @@
               removeLastFlaggedDrillButton.style.display = 'none';
             } else if (action === 'removeLastFlaggedDrill') {
               await removeLastFlaggedDrill(user.uid);
+              refreshFlaggedDrillsButtons();
 
               // Hide the buttons if action was used
               flagLastDrillButton.style.display = 'none';
@@ -152,6 +165,8 @@
           // Clear the login form
           loginForm.reset();
         }
+
+
       });
     
       window.app = app;
@@ -162,14 +177,14 @@
     <script type="module" src="js/manageOpenings.js"></script>
     <script type="module" src="js/uiFeedback.js"></script>
     
-    <!-- Force reload of the page when user returns using the back button. -->
+    <!-- Force reload of the page when user returns using the back button.
     <script>
       window.addEventListener('pageshow', (event) => {
         if (event.persisted) {
           window.location.reload();
         }
       });
-    </script>
+    </script> -->
     
     
     

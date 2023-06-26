@@ -305,4 +305,6 @@ export async function createDefaultOpeningsForNewUser(uid) {
   });
 
   await batch.commit();
+  // force refresh the page
+  window.location.reload();
 }

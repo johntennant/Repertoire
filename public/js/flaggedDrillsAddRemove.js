@@ -1,6 +1,34 @@
 import { getFirestore, doc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js";
 import { showTemporaryMessage } from "./uiFeedback.js";
 import { refreshFlaggedDrillsButtons } from "./userDataInteractions.js";
+import { storeOpeningDataInLocalStorage, getOpeningDataFromLocalStorage } from './localStorageReadWrite.js';
+
+export const getFlaggedDrillsFromLocalStorage = (colorKey) => {
+  const openingData = getOpeningDataFromLocalStorage();
+  return openingData && openingData[colorKey] ? openingData[colorKey].FlaggedDrills : [];
+};
+
+export const addDrillToFlaggedDrills = (colorKey, pgn) => {
+  const openingData = getOpeningDataFromLocalStorage();
+  if (!openingData || !openingData[colorKey]) return;
+
+  // Add the new pgn to the flagged drills array
+  openingData[colorKey].FlaggedDrills = openingData[colorKey].FlaggedDrills || [];
+  openingData[colorKey].FlaggedDrills.push(pgn);
+
+  // Save the updated opening data back to local storage
+  storeOpeningDataInLocalStorage(openingData);
+};
+
+export const updateFlaggedDrillsInFirestore = async (uid, colorKey, pgn) => {
+  const db = getFirestore();
+  const flaggedDrillsRef = doc(db, "users", uid, "openings", colorKey);
+
+  // Update the document in Firestore by adding the pgn to the FlaggedDrills array
+  await updateDoc(flaggedDrillsRef, {
+    FlaggedDrills: arrayUnion(pgn),
+  });
+};
 
 export const flagLastDrill = async (uid) => {
   // Retrieve the data from local storage
@@ -11,13 +39,12 @@ export const flagLastDrill = async (uid) => {
     const lastSelectedOpeningLineObj = JSON.parse(lastSelectedOpeningLineObjString);
     const { openingName, colorKey, pgn } = lastSelectedOpeningLineObj;
 
-    const db = getFirestore();
-    const flaggedDrillsRef = doc(db, "users", uid, "openings", colorKey);
+    // Update flagged drills in local storage
+    addDrillToFlaggedDrills(colorKey, pgn);
 
-    // Update the document in Firestore by adding the pgn to the FlaggedDrills array
-    await updateDoc(flaggedDrillsRef, {
-      FlaggedDrills: arrayUnion(pgn),
-    });
+    // Update flagged drills in Firestore
+    await updateFlaggedDrillsInFirestore(uid, colorKey, pgn);
+
     const color = colorKey === "asWhite" ? "White" : "Black";
     console.log(`Drill from '${openingName}' as '${colorKey}' added to FlaggedDrills.`);
     showTemporaryMessage(`Last drill from ${openingName} was added to Flagged Lines for ${color}.`);
@@ -28,6 +55,40 @@ export const flagLastDrill = async (uid) => {
 };
 
 
+
+
+export const removeDrillFromFlaggedDrills = (colorKey, pgn, flaggedDrillsUsedIndexes) => {
+  const openingData = getOpeningDataFromLocalStorage();
+  if (!openingData || !openingData[colorKey]) return;
+
+  // Get the FlaggedDrills array
+  const flaggedDrills = openingData[colorKey].FlaggedDrills || [];
+
+  // Find the index of the drill to be removed
+  const drillIndex = flaggedDrills.indexOf(pgn);
+  if (drillIndex !== -1) {
+    // Remove the drill from the FlaggedDrills array
+    flaggedDrills.splice(drillIndex, 1);
+  }
+
+  // Update the FlaggedDrillsUsedIndexes array
+  openingData[colorKey].FlaggedDrillsUsedIndexes = flaggedDrillsUsedIndexes;
+
+  // Save the updated opening data back to local storage
+  storeOpeningDataInLocalStorage(openingData);
+};
+
+
+export const updateFlaggedDrillsAndIndexesInFirestore = async (uid, colorKey, flaggedDrills, flaggedDrillsUsedIndexes) => {
+  const db = getFirestore();
+  const flaggedDrillsRef = doc(db, "users", uid, "openings", colorKey);
+
+  // Update the FlaggedDrills and FlaggedDrillsUsedIndexes arrays in Firestore
+  await updateDoc(flaggedDrillsRef, {
+    FlaggedDrills: flaggedDrills,
+    FlaggedDrillsUsedIndexes: flaggedDrillsUsedIndexes,
+  });
+};
 
 export const removeLastFlaggedDrill = async (uid) => {
   // Retrieve the data from local storage
@@ -57,11 +118,11 @@ export const removeLastFlaggedDrill = async (uid) => {
       // Remove the corresponding index from the FlaggedDrillsUsedIndexes array
       flaggedDrillsUsedIndexes.pop();
 
+      // Update flagged drills in local storage
+      removeDrillFromFlaggedDrills(colorKey, pgn, flaggedDrillsUsedIndexes);
+
       // Update the FlaggedDrills and FlaggedDrillsUsedIndexes arrays in Firestore
-      await updateDoc(flaggedDrillsRef, {
-        FlaggedDrills: flaggedDrills,
-        FlaggedDrillsUsedIndexes: flaggedDrillsUsedIndexes,
-      });
+      await updateFlaggedDrillsAndIndexesInFirestore(uid, colorKey, flaggedDrills, flaggedDrillsUsedIndexes);
 
       console.log("Last flagged drill removed.");
       showTemporaryMessage("Last flagged line removed.");
@@ -72,8 +133,9 @@ export const removeLastFlaggedDrill = async (uid) => {
   } else {
     console.error("No lastSelectedOpeningLineObj found in local storage.");
   }
-  refreshFlaggedDrillsButtons();
+  // refreshFlaggedDrillsButtons();
 };
+
 
 export function checkFlaggedDrillsButtons() {
   const asWhiteButton = document.querySelector("#FlaggedDrills-asWhite");

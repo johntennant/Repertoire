@@ -9,29 +9,18 @@ import { handleOpeningButtonClick, fetchOpeningData } from './openingButtons.js'
 import { shufflePickString } from './shuffleFromArrayAndStoreHistory.js'; 
 import { openURLorPGN } from './handleUrlDrillOrPgnLine.js';
 import { flagLastDrill, removeLastFlaggedDrill } from "./flaggedDrillsAddRemove.js";
+import { storeOpeningDataInLocalStorage, compareServerData, getOpeningDataFromLocalStorage } from './localStorageReadWrite.js';
 
 let lastSelectedOpeningLineObj = null;
 const openingsForWhiteContainer = document.getElementById("openings-for-white-container");
 const openingsForBlackContainer = document.getElementById("openings-for-black-container");
 const flaggedDrillsContainer = document.getElementById("flagged-drills-container");
-const flaggedDrillsInteractContainer = document.getElementById("flagged-drills-interact-container");
+let cUid = null;
+// const flaggedDrillsInteractContainer = document.getElementById("flagged-drills-interact-container");
 
 export function testFunction() {
-  const flaggedDrillData_asWhite = JSON.parse(
-    localStorage.getItem("flaggedDrillData_asWhite")
-  );
-  const flaggedDrillData_asBlack = JSON.parse(
-    localStorage.getItem("flaggedDrillData_asBlack")
-  );
 
-  // console.log(flaggedDrillData_asBlack);
-  // console.log(flaggedDrillData_asWhite);
-  const selectedFlaggedDrillsColor = Math.random() < 0.5 ? flaggedDrillData_asWhite : flaggedDrillData_asBlack;
-  const testData = selectedFlaggedDrillsColor
-
-  handleButtonClick(selectedFlaggedDrillsColor.openingName, selectedFlaggedDrillsColor.colorKey);
-
-  console.log(testData);
+  // console.log(testData);
 }
 
 window.testFunction = testFunction;
@@ -136,11 +125,9 @@ export async function handleButtonClick(openingName, colorKey) {
 
 
 export async function refreshFlaggedDrillsButtons() {
-  // We first obtain a reference to the HTML container which holds the flagged drills buttons.
   const flaggedDrillsContainer = document.getElementById('flagged-drills-container');
 
-  // Next, we clear all existing child elements (buttons in this case) from this container.
-  // This is done by repeatedly removing the first child until there are no children left.
+  // clear all existing child elements
   while (flaggedDrillsContainer.firstChild) {
     flaggedDrillsContainer.removeChild(flaggedDrillsContainer.firstChild);
   }
@@ -151,26 +138,24 @@ export async function refreshFlaggedDrillsButtons() {
   // We also define the opening names for which we want to refresh buttons.
   const openingNames = ['FlaggedDrills'];
 
-  // We obtain the user ID from the 'getCurrentUserId' function.
-  // This function must be defined elsewhere in your code.
-  const uid = getCurrentUserId();
+  // Get the opening data from local storage
+  const openingData = getOpeningDataFromLocalStorage();
 
-  // We loop through both color keys and opening names and fetch data for each combination.
+  // loop through both color keys and opening names and use data for each combination from local storage.
   for (const colorKey of colorKeys) {
     for (const openingName of openingNames) {
-      // The function 'fetchOpeningData' is called with the user ID, opening name, and color key as parameters.
-      // The data fetched from this function includes the opening lines and used indexes.
-      const fetchedDataResult = await fetchOpeningData(uid, openingName, colorKey);
+      // The data used from local storage includes the opening lines and used indexes.
+      const lines = openingData && openingData[colorKey] ? openingData[colorKey][openingName] : [];
+      const usedIndexes = openingData && openingData[colorKey] ? openingData[colorKey].FlaggedDrillsUsedIndexes : [];
 
-      // Now we recreate the buttons for each opening using the 'createOpeningButton' function.
-      // The newly created button is then appended to the container.
-      // const newButton = await createOpeningButton(openingName, colorKey, fetchedDataResult.lines);
-      const newButton = await createOpeningButton(openingName, colorKey, fetchedDataResult.lines, fetchedDataResult.usedIndexes);
+      // recreate the buttons for each opening and append to the container.
+      const newButton = await createOpeningButton(openingName, colorKey, lines, usedIndexes);
       newButton.classList.add("opening-button", "btn-primary", colorKey);
       flaggedDrillsContainer.appendChild(newButton);
     }
   }
 }
+
 
 
 const createButtonsForOpenings = async (openingData, colorKey) => {
@@ -231,19 +216,20 @@ export const fetchUserData = async (uid) => {
       openingData[colorKeys[index]] = docSnapshot.data();
     }
 
+    // Store the fetched openingData in localStorage
+    storeOpeningDataInLocalStorage(openingData);
+
     return openingData;
   } catch (error) {
     console.error("Error fetching user data:", error);
   }
 };
 
-
 export const buildUsersOpeningsUI = async (uid) => {
   try {
-    const db = getFirestore();
-    // const openingsContainer = document.getElementById("openings-container");
+    // Retrieve openingData from localStorage
+    const openingData = getOpeningDataFromLocalStorage();
 
-    const openingData = await fetchUserData(uid);
     const colorKeys = ["asWhite", "asBlack"];
 
     for (const colorKey of colorKeys) {
@@ -262,39 +248,64 @@ export const buildUsersOpeningsUI = async (uid) => {
     const removeLastFlaggedDrillButton = document.getElementById("remove-last-flagged-drill-btn");
 
     // After building the UI, check the lastSelectedOpeningLineObj
-  const lastSelectedOpeningLineObjString = localStorage.getItem('lastSelectedOpeningLineObj');
-  if (lastSelectedOpeningLineObjString) {
-    const lastSelectedOpeningLineObj = JSON.parse(lastSelectedOpeningLineObjString);
-    const removeLastFlaggedDrillButton = document.getElementById("remove-last-flagged-drill-btn");
+    const lastSelectedOpeningLineObjString = localStorage.getItem('lastSelectedOpeningLineObj');
+    if (lastSelectedOpeningLineObjString) {
+      const lastSelectedOpeningLineObj = JSON.parse(lastSelectedOpeningLineObjString);
 
-    if (lastSelectedOpeningLineObj.openingName === "FlaggedDrills") {
-      removeLastFlaggedDrillButton.classList.remove("hidden");
-      flagLastDrillButton.classList.add("hidden");
-    } else {
-      removeLastFlaggedDrillButton.classList.add("hidden");
-      flagLastDrillButton.classList.remove("hidden");
-    }}
+      // if (lastSelectedOpeningLineObj.openingName === "FlaggedDrills") {
+      //   removeLastFlaggedDrillButton.classList.remove("hidden");
+      //   flagLastDrillButton.classList.add("hidden");
+      // } else {
+      //   removeLastFlaggedDrillButton.classList.add("hidden");
+      //   flagLastDrillButton.classList.remove("hidden");
+      // }
+      if (lastSelectedOpeningLineObj.openingName === "FlaggedDrills") {
+        if (removeLastFlaggedDrillButton) {
+          removeLastFlaggedDrillButton.classList.remove("hidden");
+        }
+        if (flagLastDrillButton) {
+          flagLastDrillButton.classList.add("hidden");
+        }
+      } else {
+        if (removeLastFlaggedDrillButton) {
+          removeLastFlaggedDrillButton.classList.add("hidden");
+        }
+        if (flagLastDrillButton) {
+          flagLastDrillButton.classList.remove("hidden");
+        }
+      }
+      
+      
+    }
 
-    flagLastDrillButton.addEventListener("click", async () => {
-      await flagLastDrill(getCurrentUserId());
-      console.log("Flagged last drill! " + lastSelectedOpeningLineObj);
-    });
-
-    removeLastFlaggedDrillButton.addEventListener("click", async () => {
-      await removeLastFlaggedDrill(getCurrentUserId());
-    });
+    if (flagLastDrillButton) {
+      flagLastDrillButton.addEventListener("click", async () => {
+        await flagLastDrill(getCurrentUserId());
+        console.log("Flagged last drill! " + lastSelectedOpeningLineObj);
+      });
+    }
+    
+    if (removeLastFlaggedDrillButton) {
+      removeLastFlaggedDrillButton.addEventListener("click", async () => {
+        await removeLastFlaggedDrill(getCurrentUserId());
+      });
+    }
+    
   } catch (error) {
     console.error("Error fetching opening data:", error);
   }
-}; 
+  compareServerData(uid);
+};
 
 
-// This updates the used indexes array for the opening that was clicked on.
 async function updateOpeningUsedIndexes(uid, openingName, color, updatedUsedIndexesArray) {
   if (color !== 'asWhite' && color !== 'asBlack') {
     console.error('Invalid color. Please provide "asWhite" or "asBlack" as the color argument.');
     return;
   }
+
+  // Update used indexes in localStorage
+  updateUsedIndexesInLocalStorage(openingName, color, updatedUsedIndexesArray);
 
   const db = getFirestore();
   const openingRef = doc(db, 'users', uid, 'openings', color);
@@ -319,6 +330,20 @@ async function updateOpeningUsedIndexes(uid, openingName, color, updatedUsedInde
   }
 }
 
+function updateUsedIndexesInLocalStorage(openingName, color, updatedUsedIndexesArray) {
+  const openingData = getOpeningDataFromLocalStorage();
+  if (!openingData || !openingData[color]) return;
+
+  // Update the used indexes array in the opening data
+  if (openingData[color][openingName]) {
+    openingData[color][openingName + 'UsedIndexes'] = updatedUsedIndexesArray;
+  }
+
+  // Save the updated opening data back to local storage
+  storeOpeningDataInLocalStorage(openingData);
+}
+
+
 
 // Get the current user's ID
 
@@ -328,6 +353,7 @@ export function getCurrentUserId() {
 
   if (user) {
     // console.log(user.uid);
+    cUid = user.uid;
     return user.uid;
   } else {
     console.log("No user is signed in.");
