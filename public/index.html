@@ -140,8 +140,7 @@
               removeLastFlaggedDrillButton.style.display = 'none';
             } else if (action === 'removeLastFlaggedDrill') {
               await removeLastFlaggedDrill(user.uid);
-              refreshFlaggedDrillsButtons();
-
+              
               // Hide the buttons if action was used
               flagLastDrillButton.style.display = 'none';
               removeLastFlaggedDrillButton.style.display = 'none';

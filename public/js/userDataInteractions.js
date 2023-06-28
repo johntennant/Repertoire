@@ -63,17 +63,17 @@ async function createOpeningButton(openingName, colorKey, openingData, openingDa
 
   if (openingName === "FlaggedDrills") {
     const numberOfUsedIndexes = openingDataUsedIndexes.length;
-    console.log(numberOfUsedIndexes);
+    // console.log(numberOfUsedIndexes);
     button.textContent = `Flagged Lines for ${colorKey === "asWhite" ? "White" : "Black"} ${numberOfUsedIndexes}/${openingData.length}`;
 
     // Assign the unique ID to the button
     button.id = buttonId;
   } else {
     const numberOfUsedIndexes = openingDataUsedIndexes.length;
-    console.log(numberOfUsedIndexes);
+    // console.log(numberOfUsedIndexes);
     button.textContent = `${openingName} ${numberOfUsedIndexes}/${openingData.length}`;
-    console.log("From userDataInteractions.js, openingName:", openingName);
-    console.log("From userDataInteractions.js, openingData:", [openingName + 'UsedIndexes']);
+    // console.log("From userDataInteractions.js, openingName:", openingName);
+    // console.log("From userDataInteractions.js, openingData:", [openingName + 'UsedIndexes']);
   }
 
   button.addEventListener("click", () => handleButtonClick(openingName, colorKey));

@@ -57,7 +57,7 @@ export const flagLastDrill = async (uid) => {
 
 
 
-export const removeDrillFromFlaggedDrills = (colorKey, pgn, flaggedDrillsUsedIndexes) => {
+export const removeDrillFromLocalFlaggedDrills = (colorKey, pgn, flaggedDrillsUsedIndexes) => {
   const openingData = getOpeningDataFromLocalStorage();
   if (!openingData || !openingData[colorKey]) return;
 
@@ -76,6 +76,10 @@ export const removeDrillFromFlaggedDrills = (colorKey, pgn, flaggedDrillsUsedInd
 
   // Save the updated opening data back to local storage
   storeOpeningDataInLocalStorage(openingData);
+
+  // use the buttonID to find the button element
+  updateFlaggedDrillButtonText(colorKey, flaggedDrillsUsedIndexes, flaggedDrills);
+
 };
 
 
@@ -119,7 +123,7 @@ export const removeLastFlaggedDrill = async (uid) => {
       flaggedDrillsUsedIndexes.pop();
 
       // Update flagged drills in local storage
-      removeDrillFromFlaggedDrills(colorKey, pgn, flaggedDrillsUsedIndexes);
+      removeDrillFromLocalFlaggedDrills(colorKey, pgn, flaggedDrillsUsedIndexes);
 
       // Update the FlaggedDrills and FlaggedDrillsUsedIndexes arrays in Firestore
       await updateFlaggedDrillsAndIndexesInFirestore(uid, colorKey, flaggedDrills, flaggedDrillsUsedIndexes);
@@ -136,6 +140,20 @@ export const removeLastFlaggedDrill = async (uid) => {
   // refreshFlaggedDrillsButtons();
 };
 
+
+function updateFlaggedDrillButtonText(colorKey, flaggedDrillsUsedIndexes, flaggedDrills) {
+  const buttonID = `FlaggedDrills-${colorKey}`;
+
+  // If the button exists, update the button text
+  const button = document.querySelector(`#${buttonID}`);
+  if (button) {
+    const numberOfUsedIndexes = flaggedDrillsUsedIndexes.length;
+    // console.log(numberOfUsedIndexes);
+    button.textContent = `Flagged Lines for ${colorKey === "asWhite" ? "White2" : "Black2"} ${numberOfUsedIndexes}/${flaggedDrills.length}`;
+  } else {
+    console.error(`Button '${buttonID}' not found.`);
+  }
+}
 
 export function checkFlaggedDrillsButtons() {
   const asWhiteButton = document.querySelector("#FlaggedDrills-asWhite");
