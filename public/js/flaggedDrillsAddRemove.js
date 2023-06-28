@@ -149,7 +149,7 @@ function updateFlaggedDrillButtonText(colorKey, flaggedDrillsUsedIndexes, flagge
   if (button) {
     const numberOfUsedIndexes = flaggedDrillsUsedIndexes.length;
     // console.log(numberOfUsedIndexes);
-    button.textContent = `Flagged Lines for ${colorKey === "asWhite" ? "White2" : "Black2"} ${numberOfUsedIndexes}/${flaggedDrills.length}`;
+    button.textContent = `Flagged Lines for ${colorKey === "asWhite" ? "White" : "Black"} ${numberOfUsedIndexes}/${flaggedDrills.length}`;
   } else {
     console.error(`Button '${buttonID}' not found.`);
   }
