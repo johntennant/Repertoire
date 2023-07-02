@@ -1,3 +1,4 @@
+import { excludePGNsOutsideMoveRange, countAndSortPgnOccurrences } from './mistakePgnProcessing.js';
 
 let $status = $('#status');
 let drillPGN = "1. e4 e5 2. Nf3 Nc6 "; //default test PGN string overridden by the PGN string in the PGN text field
@@ -224,9 +225,10 @@ document.getElementById('showCorrectMoveButton').addEventListener('click', () =>
 });
 
 
-//This is called when the user makes a mistake. It stores the PGN into an array of all the mistakes made by the user--ever. 
+//This is called when the user makes a mistake. It stores the PGN into an array of all the mistakes made by the user. 
+// It's just in localStorage so it could be cleared easily. 
 
-function storeCurrentPgn() {
+function storeCurrentPgnAsMistake() {
   // Retrieve the existing array of PGNs from localStorage or initialize a new one
   let pgnArray = JSON.parse(localStorage.getItem('pgnArray')) || [];
 
@@ -237,7 +239,11 @@ function storeCurrentPgn() {
   localStorage.setItem('pgnArray', JSON.stringify(pgnArray));
 
   // Log the contents of pgnArray
-  console.log("PGN Array contents:", pgnArray);
+  console.log("Mistakes PGN Array contents:", pgnArray);
+
+  const pgnMistakesDistilled = excludePGNsOutsideMoveRange(4, 8);
+  const sortedOccurrences = countAndSortPgnOccurrences(pgnMistakesDistilled);
+  console.log('Sorted PGN Occurrences:', sortedOccurrences);
 }
 
 function clearPGNMistakesHistory() {
@@ -315,7 +321,7 @@ function pieceMove(move) {
     // console.log(mistakeCount);
     console.log("Bad guess number ", badGuesses, "out of ", badGuessHintThreshold);
     console.log(game.pgn())
-    storeCurrentPgn();
+    storeCurrentPgnAsMistake();
     if (badGuesses >= badGuessHintThreshold) {
       showCorrectMove(); 
     }
