@@ -25,6 +25,40 @@ export function testFunction() {
 
 window.testFunction = testFunction;
 
+// Dynamic button that changes text based on the last selected opening line 
+// only visible when the last line selected was not a flagged drill
+lastSelectedOpeningLineObj = JSON.parse(localStorage.getItem('lastSelectedOpeningLineObj')) || {};
+
+const dynamicPracticeLineButton = document.getElementById('dynamic-practice-line-button');
+const loadNewFlaggedDrillButton = document.getElementById('loadNewFlaggedDrillButton');
+
+if (dynamicPracticeLineButton) { // Check if the dynamicPracticeLineButton exists
+  if (lastSelectedOpeningLineObj.openingName) {
+    dynamicPracticeLineButton.textContent = `Practice a new line from ${lastSelectedOpeningLineObj.openingName}`;
+
+    // Hide or show buttons based on the openingName
+    if (lastSelectedOpeningLineObj.openingName === "FlaggedDrills") {
+      dynamicPracticeLineButton.style.display = "none"; // Hide dynamicPracticeLineButton
+      if (loadNewFlaggedDrillButton) loadNewFlaggedDrillButton.style.display = "block"; // Show loadNewFlaggedDrillButton
+    } else {
+      dynamicPracticeLineButton.style.display = "block"; // Show dynamicPracticeLineButton
+      if (loadNewFlaggedDrillButton) loadNewFlaggedDrillButton.style.display = "none"; // Hide loadNewFlaggedDrillButton
+    }
+  } else {
+    dynamicPracticeLineButton.textContent = `Practice a new line`; // Default text
+    dynamicPracticeLineButton.style.display = "block"; // Show dynamicPracticeLineButton
+    if (loadNewFlaggedDrillButton) loadNewFlaggedDrillButton.style.display = "none"; // Hide loadNewFlaggedDrillButton
+  }
+}
+
+// Add event listener to the dynamicPracticeLineButton
+if (dynamicPracticeLineButton) { // Check if the button exists
+  dynamicPracticeLineButton.addEventListener('click', function() {
+    handleButtonClick(lastSelectedOpeningLineObj.openingName, lastSelectedOpeningLineObj.colorKey);
+  });
+}
+
+
 export async function practiceNewDrill() {
   const flaggedDrillData_asWhite = JSON.parse(
     localStorage.getItem("flaggedDrillData_asWhite")
