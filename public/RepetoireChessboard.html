@@ -97,6 +97,15 @@
         }, 700);
       }
 
+      // Set the background color to darkgrey if the last selected opening line was not a flagged drill
+      const lastSelectedOpeningLineObjString = localStorage.getItem("lastSelectedOpeningLineObj");
+      if (lastSelectedOpeningLineObjString) {
+        const lastSelectedOpeningLineObj = JSON.parse(lastSelectedOpeningLineObjString);
+        if (lastSelectedOpeningLineObj.openingName !== "FlaggedDrills") {
+          document.body.style.backgroundColor = "dimgrey";
+        }
+      }
+
       // Automatically click the "Load PGN Text" button
       // with a delay to allow the page to load
       // There's got to be a better way to do this... :) 

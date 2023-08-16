@@ -98,14 +98,16 @@ async function createOpeningButton(openingName, colorKey, openingData, openingDa
   if (openingName === "FlaggedDrills") {
     const numberOfUsedIndexes = openingDataUsedIndexes.length;
     // console.log(numberOfUsedIndexes);
-    button.textContent = `Flagged Lines for ${colorKey === "asWhite" ? "White" : "Black"} ${numberOfUsedIndexes}/${openingData.length}`;
+    // button.textContent = `Flagged Lines for ${colorKey === "asWhite" ? "White" : "Black"} ${numberOfUsedIndexes}/${openingData.length}`; // Show the number of used indexes
+    button.textContent = `Flagged Lines for ${colorKey === "asWhite" ? "White" : "Black"} [${openingData.length}]`; // Don't show the number of used indexes
 
     // Assign the unique ID to the button
     button.id = buttonId;
   } else {
     const numberOfUsedIndexes = openingDataUsedIndexes.length;
     // console.log(numberOfUsedIndexes);
-    button.textContent = `${openingName} ${numberOfUsedIndexes}/${openingData.length}`;
+    // button.textContent = `${openingName} ${numberOfUsedIndexes}/${openingData.length}`; // Show the number of used indexes
+    button.textContent = `${openingName} [${openingData.length}]`; // Don't show the number of used indexes
     // console.log("From userDataInteractions.js, openingName:", openingName);
     // console.log("From userDataInteractions.js, openingData:", [openingName + 'UsedIndexes']);
   }
@@ -114,9 +116,6 @@ async function createOpeningButton(openingName, colorKey, openingData, openingDa
 
   // Save to localStorage if it's a flagged drill button
   if (openingName === "FlaggedDrills") {
-    // Note: We can't store DOM elements (like buttons) directly in localStorage as it only supports strings.
-    // But you can store the other related data and recreate the button later when you need it.
-
     const flaggedDrillData = {
       openingName: openingName,
       colorKey: colorKey

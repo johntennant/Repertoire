@@ -140,8 +140,15 @@ function updateMoveNumber() {
   const numbersOfMoves = Math.ceil(sanArray.length / 2);
 
   moveNumberElement.textContent = `Move: ${moveNumber}/${numbersOfMoves}`;
-  console.log(`Move: ${moveNumber}`);
+  console.log(`Move: ${moveNumber} Number of moves: ${numbersOfMoves}`);
+
+  // Check if numberOfMoves is 2
+  if (numbersOfMoves == 2) {
+    // Wait for 100ms and then call the updateMoveNumber function again
+    setTimeout(updateMoveNumber, 100);
+  }
 }
+
 
 //Buttons
 
