@@ -159,6 +159,10 @@
         margin-left: 10%;
     }
 
+    #maxDepth {
+      width: 20%;
+    }
+
     #manage-openings-container {
         margin-left: 10%;
     }

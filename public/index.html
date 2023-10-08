@@ -48,6 +48,11 @@
     
 
     <div id="manage-openings-container" class="container">
+      <!-- <label for="maxDepth">Max Practice Depth:</label> -->
+      <br/>
+      <input id="maxDepth" class="hidden" required="" type="number"/>
+      <button type="button" id="storeMaxPracticeDepthButton" class="hidden">Store Max Practice Depth</button>  
+      <br/>
       <button type="button" id="import-new-opening-btn" class="btn-primary">Import New Opening</button>
       <button type="button" id="remove-opening-btn" class="btn-primary">Remove Opening</button>
     </div>
@@ -83,6 +88,8 @@
       const app = initializeApp(firebaseConfig);
       const analytics = getAnalytics(app);
       const auth = getAuth(app);
+      let inputField = document.getElementById('maxDepth');                                                                             
+      let storeButton = document.getElementById('storeButton');
       
       import { getCurrentUserId, fetchUserData, buildUsersOpeningsUI, removeAllButtons, loadNewFlaggedDrill, refreshFlaggedDrillsButtons } from "./js/userDataInteractions.js";
       import { flagLastDrill, removeLastFlaggedDrill, checkFlaggedDrillsButtons } from "./js/flaggedDrillsAddRemove.js";
@@ -147,8 +154,14 @@
             }
             // Always clear the action after running it
             localStorage.removeItem('action');
-            setTimeout(checkFlaggedDrillsButtons, 1000);
-          }
+            storeButton.addEventListener('click', function () {
+              // Get the value of the input field and store it in local storage                                                             
+              localStorage.setItem('maxDepth', inputField.value);
+
+              // Print a message to the console                                                                                             
+              console.log("maxDepth set to: " + inputField.value);
+            });
+            setTimeout(checkFlaggedDrillsButtons, 1000);}
     
         } else { // User is signed out or there is no user signed in
           console.log("No user is signed in.");

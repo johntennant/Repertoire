@@ -12,12 +12,21 @@ let pgnLines = [];
 let sanArray = pgnToSanArray(PGN_STRING);
 let sanArrayIndex = 0;
 let playerColor = 'white';
+// let maxPracticeDepth = 5;
 const urlParams = new URLSearchParams(window.location.search);
 const color = urlParams.get('color');
 
+const storedOpeningData = localStorage.getItem('openingData'); 
+const openingData = JSON.parse(storedOpeningData);
 
+let maxPracticeDepth = openingData.maxPracticeDepth;
+console.log("maxPracticeDepth:", maxPracticeDepth);
 
-
+function resetMaxPracticeDepth() {
+  const storedOpeningData = localStorage.getItem('openingData'); 
+  const openingData = JSON.parse(storedOpeningData);
+  maxPracticeDepth = openingData.maxPracticeDepth;
+}
 
 console.log("mPGNPlaybackAssist.js loaded");
 // alert('mPGNPlaybackAssist.js is running');
@@ -84,8 +93,14 @@ function makePGNMove () {
     board.position(game.fen());
     badGuesses = 0
     sanArrayIndex++; 
+    console.log(sanArrayIndex)
     updateMoveNumber();
-    if (sanArrayIndex === sanArray.length) {
+    if (sanArrayIndex === sanArray.length)
+     {
+      changeBackgroundColor()
+    } else
+    if (sanArrayIndex > maxPracticeDepth)
+     {
       changeBackgroundColor()
     }}
 }
@@ -273,7 +288,7 @@ window.repertoireBoard = board;
 
 resetGame();
 
-function resetGame() {
+export function resetGame() {
   sanArrayIndex = 0; // Reset the sanArrayIndex to 0 so that the next move is the first move in the array - the first move in the PGN Text that was loaded. 
   mistakeCount = 0; // Reset the mistake count to 0
   numberOfHints = 0; // Reset the number of hints to 0
@@ -284,6 +299,7 @@ function resetGame() {
   board.setOrientation(ChessUtils.ORIENTATION.white);
   playerColor = 'white';
   updateMoveNumber();
+  resetMaxPracticeDepth();
   window.setTimeout(checkColorAndFlipBoard, 1000);
 }
 

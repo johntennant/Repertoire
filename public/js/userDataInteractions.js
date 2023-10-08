@@ -2,6 +2,7 @@ import {
   getFirestore,
   doc,
   getDoc,
+  setDoc,
   updateDoc
 } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js";
@@ -236,6 +237,7 @@ export const fetchUserData = async (uid) => {
   try {
     const db = getFirestore();
 
+    // Fetching only the openings for now
     const docRefs = [
       doc(db, "users", uid, "openings", "asWhite"),
       doc(db, "users", uid, "openings", "asBlack"),
@@ -249,6 +251,21 @@ export const fetchUserData = async (uid) => {
       openingData[colorKeys[index]] = docSnapshot.data();
     }
 
+    // Now, fetch the user document to get/check the maxPracticeDepth
+    const userDocSnapshot = await getDoc(doc(db, "users", uid));
+
+    if (!userDocSnapshot.exists()) {
+      // If user document doesn't exist, create one with maxPracticeDepth set to 100
+      await setDoc(doc(db, "users", uid), { maxPracticeDepth: 100 });
+      openingData["maxPracticeDepth"] = 100;
+    } else if (!userDocSnapshot.data().maxPracticeDepth) {
+      // If maxPracticeDepth doesn't exist, set it to 100 in Firestore
+      await updateDoc(doc(db, "users", uid), { maxPracticeDepth: 100 });
+      openingData["maxPracticeDepth"] = 100;
+    } else {
+      openingData["maxPracticeDepth"] = userDocSnapshot.data().maxPracticeDepth;
+    }
+
     // Store the fetched openingData in localStorage
     storeOpeningDataInLocalStorage(openingData);
 
@@ -257,6 +274,9 @@ export const fetchUserData = async (uid) => {
     console.error("Error fetching user data:", error);
   }
 };
+
+
+
 
 export const buildUsersOpeningsUI = async (uid) => {
   try {
@@ -421,3 +441,4 @@ export function loadNewFlaggedDrill(colorKey) {
     console.error(`No button found for colorKey ${colorKey}`);
   }
 }
+
