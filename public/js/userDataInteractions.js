@@ -2,6 +2,7 @@ import {
   getFirestore,
   doc,
   getDoc,
+  setDoc,
   updateDoc
 } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js";
@@ -24,6 +25,40 @@ export function testFunction() {
 }
 
 window.testFunction = testFunction;
+
+// Dynamic button that changes text based on the last selected opening line 
+// only visible when the last line selected was not a flagged drill
+lastSelectedOpeningLineObj = JSON.parse(localStorage.getItem('lastSelectedOpeningLineObj')) || {};
+
+const dynamicPracticeLineButton = document.getElementById('dynamic-practice-line-button');
+const loadNewFlaggedDrillButton = document.getElementById('loadNewFlaggedDrillButton');
+
+if (dynamicPracticeLineButton) { // Check if the dynamicPracticeLineButton exists
+  if (lastSelectedOpeningLineObj.openingName) {
+    dynamicPracticeLineButton.textContent = `Practice a new line from ${lastSelectedOpeningLineObj.openingName}`;
+
+    // Hide or show buttons based on the openingName
+    if (lastSelectedOpeningLineObj.openingName === "FlaggedDrills") {
+      dynamicPracticeLineButton.style.display = "none"; // Hide dynamicPracticeLineButton
+      if (loadNewFlaggedDrillButton) loadNewFlaggedDrillButton.style.display = "block"; // Show loadNewFlaggedDrillButton
+    } else {
+      dynamicPracticeLineButton.style.display = "block"; // Show dynamicPracticeLineButton
+      if (loadNewFlaggedDrillButton) loadNewFlaggedDrillButton.style.display = "none"; // Hide loadNewFlaggedDrillButton
+    }
+  } else {
+    dynamicPracticeLineButton.textContent = `Practice a new line`; // Default text
+    dynamicPracticeLineButton.style.display = "block"; // Show dynamicPracticeLineButton
+    if (loadNewFlaggedDrillButton) loadNewFlaggedDrillButton.style.display = "none"; // Hide loadNewFlaggedDrillButton
+  }
+}
+
+// Add event listener to the dynamicPracticeLineButton
+if (dynamicPracticeLineButton) { // Check if the button exists
+  dynamicPracticeLineButton.addEventListener('click', function() {
+    handleButtonClick(lastSelectedOpeningLineObj.openingName, lastSelectedOpeningLineObj.colorKey);
+  });
+}
+
 
 export async function practiceNewDrill() {
   const flaggedDrillData_asWhite = JSON.parse(
@@ -64,14 +99,16 @@ async function createOpeningButton(openingName, colorKey, openingData, openingDa
   if (openingName === "FlaggedDrills") {
     const numberOfUsedIndexes = openingDataUsedIndexes.length;
     // console.log(numberOfUsedIndexes);
-    button.textContent = `Flagged Lines for ${colorKey === "asWhite" ? "White" : "Black"} ${numberOfUsedIndexes}/${openingData.length}`;
+    // button.textContent = `Flagged Lines for ${colorKey === "asWhite" ? "White" : "Black"} ${numberOfUsedIndexes}/${openingData.length}`; // Show the number of used indexes
+    button.textContent = `Flagged Lines for ${colorKey === "asWhite" ? "White" : "Black"} [${openingData.length}]`; // Don't show the number of used indexes
 
     // Assign the unique ID to the button
     button.id = buttonId;
   } else {
     const numberOfUsedIndexes = openingDataUsedIndexes.length;
     // console.log(numberOfUsedIndexes);
-    button.textContent = `${openingName} ${numberOfUsedIndexes}/${openingData.length}`;
+    // button.textContent = `${openingName} ${numberOfUsedIndexes}/${openingData.length}`; // Show the number of used indexes
+    button.textContent = `${openingName} [${openingData.length}]`; // Don't show the number of used indexes
     // console.log("From userDataInteractions.js, openingName:", openingName);
     // console.log("From userDataInteractions.js, openingData:", [openingName + 'UsedIndexes']);
   }
@@ -80,9 +117,6 @@ async function createOpeningButton(openingName, colorKey, openingData, openingDa
 
   // Save to localStorage if it's a flagged drill button
   if (openingName === "FlaggedDrills") {
-    // Note: We can't store DOM elements (like buttons) directly in localStorage as it only supports strings.
-    // But you can store the other related data and recreate the button later when you need it.
-
     const flaggedDrillData = {
       openingName: openingName,
       colorKey: colorKey
@@ -203,6 +237,7 @@ export const fetchUserData = async (uid) => {
   try {
     const db = getFirestore();
 
+    // Fetching only the openings for now
     const docRefs = [
       doc(db, "users", uid, "openings", "asWhite"),
       doc(db, "users", uid, "openings", "asBlack"),
@@ -216,6 +251,21 @@ export const fetchUserData = async (uid) => {
       openingData[colorKeys[index]] = docSnapshot.data();
     }
 
+    // Now, fetch the user document to get/check the maxPracticeDepth
+    const userDocSnapshot = await getDoc(doc(db, "users", uid));
+
+    if (!userDocSnapshot.exists()) {
+      // If user document doesn't exist, create one with maxPracticeDepth set to 100
+      await setDoc(doc(db, "users", uid), { maxPracticeDepth: 100 });
+      openingData["maxPracticeDepth"] = 100;
+    } else if (!userDocSnapshot.data().maxPracticeDepth) {
+      // If maxPracticeDepth doesn't exist, set it to 100 in Firestore
+      await updateDoc(doc(db, "users", uid), { maxPracticeDepth: 100 });
+      openingData["maxPracticeDepth"] = 100;
+    } else {
+      openingData["maxPracticeDepth"] = userDocSnapshot.data().maxPracticeDepth;
+    }
+
     // Store the fetched openingData in localStorage
     storeOpeningDataInLocalStorage(openingData);
 
@@ -224,6 +274,9 @@ export const fetchUserData = async (uid) => {
     console.error("Error fetching user data:", error);
   }
 };
+
+
+
 
 export const buildUsersOpeningsUI = async (uid) => {
   try {
@@ -388,3 +441,4 @@ export function loadNewFlaggedDrill(colorKey) {
     console.error(`No button found for colorKey ${colorKey}`);
   }
 }
+

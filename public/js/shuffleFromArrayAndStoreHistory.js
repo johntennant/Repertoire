@@ -6,18 +6,22 @@
 export function shufflePickString(usedIndexesArrayInt, stringArray) {
   console.log("Previously used indexes: ", usedIndexesArrayInt);
   console.log("Number of drills: ", stringArray.length);
+  var stringIndex;
 
   if (stringArray.length > usedIndexesArrayInt.length) {
     do {
-      var stringIndex = Math.floor(Math.random() * stringArray.length);
+      stringIndex = Math.floor(Math.random() * stringArray.length);
       var stringIndexIsUsed = usedIndexesArrayInt.includes(stringIndex);
       console.log("Randomly picked index: ", stringIndex);
       console.log("Is picked index used? ", stringIndexIsUsed);
     } while (stringIndexIsUsed);
   } else {
-    console.log("All strings have been used, resetting used indexes");
-    usedIndexesArrayInt = [];
-    var stringIndex = Math.floor(Math.random() * stringArray.length);
+    console.log("All strings have been used, keeping higher half of used indexes");
+    let halfLength = Math.floor(usedIndexesArrayInt.length / 2);
+    usedIndexesArrayInt = usedIndexesArrayInt.slice(halfLength);
+    do {
+      stringIndex = Math.floor(Math.random() * stringArray.length);
+    } while (usedIndexesArrayInt.includes(stringIndex));
   }
 
   let string = stringArray[stringIndex];
@@ -35,4 +39,3 @@ export function shufflePickString(usedIndexesArrayInt, stringArray) {
     updatedUsedIndexes: usedIndexesArrayInt,
   };
 }
-

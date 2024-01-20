@@ -30,3 +30,6 @@ build/
 # not needed anymore
 
 openingsLib
+
+# llm-related
+litellm_uuid.txt
