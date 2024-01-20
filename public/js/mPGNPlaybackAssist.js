@@ -101,7 +101,7 @@ function makePGNMove () {
     } else
     if (sanArrayIndex > maxPracticeDepth)
      {
-      changeBackgroundColor()
+      // changeBackgroundColor()
     }}
 }
 
@@ -118,12 +118,11 @@ function changeBackgroundColor() {
     resetResetButtonColor();
 }
 
-
-
 // Show correct move
-
 function showCorrectMove() {
-  const correctMove = sanArray[sanArrayIndex].slice(0, 3);
+  // Extract the full move string from the sanArray
+  const correctMove = sanArray[sanArrayIndex];
+
   console.log(correctMove);
 
   // Update the content of the 'correct-move' element
@@ -138,6 +137,7 @@ function showCorrectMove() {
   changeResetButtonColorToGreen();
   window.setTimeout(resetResetButtonColor, 450);
 }
+
 
 // Update the mistakes count.
 
