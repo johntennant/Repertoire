@@ -1,6 +1,7 @@
 {
   "projects": {
-    "default": "project-repertoire"
+    "default": "project-repertoire",
+    "staging": "project-repertoire"
   },
   "targets": {
     "project-repertoire": {
